@@ -35,5 +35,4 @@ Other utilities: \code{\link{ensure.path}};
   \code{\link{timeintervals.to.seconds}};
   \code{\link{timestamp.to.seconds}}
 }
-\keyword{internal}
 

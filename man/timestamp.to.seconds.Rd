@@ -46,5 +46,4 @@ Other utilities: \code{\link{defactor}};
   \code{\link{str.to.timestamp}};
   \code{\link{timeintervals.to.seconds}}
 }
-\keyword{internal}
 

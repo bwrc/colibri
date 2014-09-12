@@ -33,5 +33,4 @@ Other utilities: \code{\link{defactor}};
   \code{\link{timeintervals.to.seconds}};
   \code{\link{timestamp.to.seconds}}
 }
-\keyword{internal}
 
