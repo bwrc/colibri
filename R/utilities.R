@@ -35,7 +35,7 @@ get.file.extension <- function(filename) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 str.to.timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
     if (is.null(timeformat))
         stop("Missing time format.")
@@ -52,7 +52,7 @@ str.to.timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 defactor <- function(x, type = "numeric") {
     switch(type,
            numeric = return(as.numeric(as.character(x))),
@@ -77,7 +77,7 @@ defactor <- function(x, type = "numeric") {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 timestamp.to.seconds <- function(recording, t0, timeformat = "%Y%m%dT%H%M%S", return.indices = FALSE, signal = NULL) {
     ## Calculate differences in seconds
     if (class(t0)[1] != "POSIXct")
@@ -123,7 +123,7 @@ timestamp.to.seconds <- function(recording, t0, timeformat = "%Y%m%dT%H%M%S", re
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 timeintervals.to.seconds <- function(recording, t0, t1, timeformat = NULL, return.indices = FALSE, signal = NULL) {
     ## Some sanity checks
     if (t0 < recording$properties$time.start)
@@ -165,7 +165,7 @@ timeintervals.to.seconds <- function(recording, t0, t1, timeformat = NULL, retur
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 seconds.to.indices <- function(recording, t0, t1 = NULL, signal = NULL) {
     if (is.null(signal))
         stop("No signal name provided!")
@@ -193,7 +193,7 @@ seconds.to.indices <- function(recording, t0, t1 = NULL, signal = NULL) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 extract.segment <- function(recording, ind1, ind2 = NULL, signal = NULL) {
     if (is.null(signal))
         stop("No signal name provided!")
@@ -223,7 +223,7 @@ extract.segment <- function(recording, ind1, ind2 = NULL, signal = NULL) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 extract.segment.s <- function(recording, t0, t1, signal = NULL) {
     if (is.null(signal))
         stop("No signal name provided!")
@@ -249,7 +249,7 @@ extract.segment.s <- function(recording, t0, t1, signal = NULL) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 extract.segment.timestamp <- function(recording, ts0, ts1 = NULL, signal = NULL) {
     if (is.null(signal))
         stop("No signal name provided!")
@@ -275,7 +275,7 @@ extract.segment.timestamp <- function(recording, ts0, ts1 = NULL, signal = NULL)
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 extract.segment.block <- function(recording, blockid, signal = NULL) {
     if (is.null(signal))
         stop("No signal name provided!")
@@ -322,7 +322,7 @@ extract.segment.block <- function(recording, blockid, signal = NULL) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 generate.segments.from.block <- function(block, settings, tolerance = 1) {
     generate.segments(block$starttime, block$stoptime, segment.length = settings$segment.length, segment.overlap = settings$segment.overlap)
 }
@@ -350,7 +350,7 @@ generate.segments.from.block <- function(block, settings, tolerance = 1) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 generate.segments <- function(time.start, time.stop, segment.length, segment.overlap, tolerance = 1) {
 
     if (tolerance > 0)
@@ -387,7 +387,7 @@ generate.segments <- function(time.start, time.stop, segment.length, segment.ove
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 generate.result.row <- function(block) {
     drop.column.list <- c("dataid", "starttype", "starttime", "stoptype", "stoptime")
     block$segment    <- NA
@@ -406,7 +406,7 @@ generate.result.row <- function(block) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 replicate.df.row <- function(row, N) {
     row[rep(seq_len(nrow(row)), N), ]
 }
@@ -423,7 +423,7 @@ replicate.df.row <- function(row, N) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 integrate.power <- function(f, p, fmin, fmax) {
     if (length(fmin) == 2) {
         fmax <- fmin[2]
@@ -455,7 +455,7 @@ integrate.power <- function(f, p, fmin, fmax) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 ibi.from.ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE) {
     r.peaks   <- qrs.detect(recording$signal[[signal]][["data"]], recording$signal[[signal]][["samplingrate"]], interpolate = interpolate.qrs)
     ibi       <- diff(1000 * (r.peaks[,1] / recording$signal$ECG$samplingrate))
@@ -481,7 +481,7 @@ ibi.from.ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE) {
 #'
 #' @family utilities
 #' 
-#' @keywords internal
+#' @export
 ensure.path <- function(x, recursive = FALSE) {
     x <- gsub("//", "/", x)
     if (! file.exists(x))
