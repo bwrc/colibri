@@ -73,7 +73,7 @@
 #' @family settings
 #'
 #' @export
-settings.template <- function() {
+settings_template_hrv <- function() {
     settings                            <- list()
 
     ## Define what analyses should be performed

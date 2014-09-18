@@ -15,7 +15,7 @@
 #' @family HRV
 #'
 #' @export
-qrs.interpolate <- function(ind.r, sig, window.length = 6, n.spline = 1000) {
+qrs_interpolate <- function(ind.r, sig, window.length = 6, n.spline = 1000) {
     x.tmp    <- (ind.r - (window.length / 2)):(ind.r + (window.length / 2))
     sp       <- spline(x = x.tmp, y = sig[x.tmp], n = n.spline)
     ind.r    <- which.max(sp$y)
@@ -31,7 +31,7 @@ qrs.interpolate <- function(ind.r, sig, window.length = 6, n.spline = 1000) {
 #' @return The data in x, averaged in a window of width n.
 #'
 #' @export
-moving.average <- function(x, n = 10) {
+moving_average <- function(x, n = 10) {
     stats::filter(x, rep(1/n, n), sides = 2)
 }
 
@@ -46,7 +46,7 @@ moving.average <- function(x, n = 10) {
 #' @return A list with the start and stop indices in the.
 #'
 #' @export
-adjust.indices <- function(ind.start, ind.stop) {
+adjust_indices <- function(ind.start, ind.stop) {
     if (ind.stop[1] <= ind.start[1])
         ind.stop <- ind.stop[-1]
 
@@ -69,7 +69,7 @@ adjust.indices <- function(ind.start, ind.stop) {
 #' @family HRV
 #'
 #' @export
-qrs.detect <- function(ecg, samplingrate, interpolate = TRUE) {
+qrs_detect <- function(ecg, samplingrate, interpolate = TRUE) {
     ecg.orig <- ecg
     
     debug <- FALSE
@@ -91,7 +91,7 @@ qrs.detect <- function(ecg, samplingrate, interpolate = TRUE) {
     nma <- ceiling((125 / 1000) * samplingrate)
     ## ecg.new <- moving.average(ecg.new, n = 15)
     ## ecg.new <- moving.average(ecg.new, n = 31)
-    ecg.new <- moving.average(ecg.new, n = nma)
+    ecg.new <- moving_average(ecg.new, n = nma)
 
     ## Determine threshold
     if (length(ecg.new) > (5 * samplingrate)) {
@@ -115,7 +115,7 @@ qrs.detect <- function(ecg, samplingrate, interpolate = TRUE) {
     ind.falling <- which(diff(ecg.new) == -1)
 
     ## Adjust the indices so, that there are only matching pairs of rising and falling indices
-    tmp <- adjust.indices(ind.rising, ind.falling)
+    tmp <- adjust_indices(ind.rising, ind.falling)
     ind.rising <- tmp$ind.start
     ind.falling <- tmp$ind.stop
 
@@ -130,7 +130,7 @@ qrs.detect <- function(ecg, samplingrate, interpolate = TRUE) {
     ## Improve R-peak detection using interpolation
     
     if (interpolate)
-        r.peaks <- t(sapply(ind.r, function(i) qrs.interpolate(i, ecg)))
+        r.peaks <- t(sapply(ind.r, function(i) qrs_interpolate(i, ecg)))
 
 
     debug <- FALSE

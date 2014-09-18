@@ -17,22 +17,22 @@ A string representation of the factor.
 Convert a factor to a string or numeric representation.
 }
 \seealso{
-Other utilities: \code{\link{ensure.path}};
-  \code{\link{extract.segment.block}};
-  \code{\link{extract.segment.s}};
-  \code{\link{extract.segment.timestamp}};
-  \code{\link{extract.segment}};
-  \code{\link{generate.result.row}};
-  \code{\link{generate.segments.from.block}};
-  \code{\link{generate.segments}};
-  \code{\link{get.file.extension}};
-  \code{\link{get.filename.parts}};
-  \code{\link{ibi.from.ecg}};
-  \code{\link{integrate.power}};
-  \code{\link{replicate.df.row}};
-  \code{\link{seconds.to.indices}};
-  \code{\link{str.to.timestamp}};
-  \code{\link{timeintervals.to.seconds}};
-  \code{\link{timestamp.to.seconds}}
+Other utilities: \code{\link{ensure_path}};
+  \code{\link{extract_segment_block}};
+  \code{\link{extract_segment_s}};
+  \code{\link{extract_segment_timestamp}};
+  \code{\link{extract_segment}};
+  \code{\link{generate_result_row}};
+  \code{\link{generate_segments_from_block}};
+  \code{\link{generate_segments}};
+  \code{\link{get_file_extension}};
+  \code{\link{get_filename_parts}};
+  \code{\link{ibi_from_ecg}};
+  \code{\link{integrate_power}};
+  \code{\link{replicate_df_row}};
+  \code{\link{seconds_to_indices}};
+  \code{\link{str_to_timestamp}};
+  \code{\link{timeintervals_to_seconds}};
+  \code{\link{timestamp_to_seconds}}
 }
 

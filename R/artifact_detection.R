@@ -15,7 +15,7 @@
 #' @family HRV
 #' 
 #' @export
-detect.artifacts.xu <- function(x) {
+detect_artifacts_xu <- function(x) {
 
     N             <- length(x)
     last.accepted <- x[1]
@@ -62,7 +62,7 @@ detect.artifacts.xu <- function(x) {
 #' Visualize artifacts in IBI time series.
 #'
 #' Artifact detection is performed using the method presented by Xu and Schuckers
-#' \code{\link{detect.artifacts.xu}} and the result is visualized.
+#' \code{\link{detect_artifacts_xu}} and the result is visualized.
 #'
 #' @param ibi A vector with the interbeat intervals (IBIs)
 #' @param ibi.t A vector with the times of occurrence of the interbeat intervals (IBIs)
@@ -72,9 +72,9 @@ detect.artifacts.xu <- function(x) {
 #' @family HRV
 #' 
 #' @export
-plot.artifacts <- function(ibi, ibi.t) {
+plot_artifacts <- function(ibi, ibi.t) {
     ## Detect artifacts
-    ind <- detect.artifacts.xu(ibi)
+    ind <- detect_artifacts_xu(ibi)
     ibi <- 60e3 / ibi
     
     ## Plot raw ibi data

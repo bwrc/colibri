@@ -18,7 +18,7 @@
 #' @family HRV frequency-domain
 #' 
 #' @export
-analyse.frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
+analyse_frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
 
     ## Calculate the spectrum
     fmin    <- settings$frequencydomain$parameters$f.limits[1]
@@ -32,7 +32,7 @@ analyse.frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
                            smooth.kernel = settings$frequencydomain$parameters$kernel,
                            smooth.degree = settings$frequencydomain$parameters$smooth.degree)
 
-    res  <- lapply(metric.list, analyse.frequencydomain.helper, spec, settings)
+    res  <- lapply(metric.list, analyse_frequencydomain_helper, spec, settings)
 }
 
 
@@ -47,11 +47,11 @@ analyse.frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
 #' @family HRV frequency-domain
 #' 
 #' @keywords internal
-analyse.frequencydomain.helper <- function(metric, spec, settings) {
+analyse_frequencydomain_helper <- function(metric, spec, settings) {
 
     switch(metric,
-           standard = ibi.band.standard(spec, settings),
-           custom = ibi.band.custom(spec, settings)
+           standard = ibi_band_standard(spec, settings),
+           custom = ibi_band_custom(spec, settings)
            )
 }
 
@@ -72,13 +72,13 @@ analyse.frequencydomain.helper <- function(metric, spec, settings) {
 #' @family HRV frequency-domain
 #' 
 #' @export
-ibi.band.standard <- function(spec, settings) {
+ibi_band_standard <- function(spec, settings) {
 
-    tot <- integrate.power(spec$f, spec$Px, settings$frequencydomain$parameters$f.limits)
+    tot <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$f.limits)
 
-    vlf <- integrate.power(spec$f, spec$Px, settings$frequencydomain$parameters$band.vlf)
-    lf  <- integrate.power(spec$f, spec$Px, settings$frequencydomain$parameters$band.lf)
-    hf  <- integrate.power(spec$f, spec$Px, settings$frequencydomain$parameters$band.hf)
+    vlf <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$band.vlf)
+    lf  <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$band.lf)
+    hf  <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$band.hf)
 
     lf.norm <- 100 * exp(log(lf) - log(tot - vlf))
     hf.norm <- 100 * exp(log(hf) - log(tot - vlf))
@@ -96,6 +96,7 @@ ibi.band.standard <- function(spec, settings) {
     res
 }
 
+
 #' Calculate the power in custom HRV frequency bands.
 #'
 #' @param spec The Lomb-Scargle spectrum estimated from the IBI series using the function lombscargle.
@@ -111,7 +112,7 @@ ibi.band.standard <- function(spec, settings) {
 #' @family HRV frequency-domain
 #' 
 #' @export
-ibi.band.custom <- function(spec, settings) {
+ibi_band_custom <- function(spec, settings) {
     N <- length(settings$frequencydomain$parameters$band.names.custom)
     res           <- matrix(data = NA, ncol = 1, nrow = N)
     rownames(res) <- settings$frequencydomain$parameters$band.names.custom
@@ -119,7 +120,7 @@ ibi.band.custom <- function(spec, settings) {
     
     for (i in seq(N)) {
         band   <- c(settings$frequencydomain$parameters$band.lower[i], settings$frequencydomain$parameters$band.upper[i])
-        res[i] <- integrate.power(spec$f, spec$Px, band)
+        res[i] <- integrate_power(spec$f, spec$Px, band)
     }
 
     res

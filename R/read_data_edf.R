@@ -12,7 +12,7 @@ read.data.edf <- function(filename) {
     require(edf)
     
     ## Initialise the recording structure
-    recording            <- new.recording()
+    recording <- new_recording()
 
     ## Read the edf data
     edf <- read.edf(filename)
@@ -20,7 +20,7 @@ read.data.edf <- function(filename) {
     ## Set the start and stop time of the recording
     timeformat <- "%d.%m.%y %H.%M.%S"
     recording$properties$time.start.raw <- paste(edf$header.global$startdate, edf$header.global$starttime, sep = " ")
-    recording$properties$time.start     <- str.to.timestamp(recording$properties$time.start.raw, timeformat)
+    recording$properties$time.start     <- str_to_timestamp(recording$properties$time.start.raw, timeformat)
 
     recording$properties$length <- edf$header.global$n.data.records * edf$header.global$data.record.duration
     
@@ -36,7 +36,7 @@ read.data.edf <- function(filename) {
     recording$properties$device.version <- 1
 
     ## Set the zerotime that anchors time operations on the recording
-    recording <- recording.set.zerotime(recording, recording$properties$time.start)
+    recording <- recording_set_zerotime(recording, recording$properties$time.start)
 
     ## Store the signals
     recording$signal <- edf$signal

@@ -15,8 +15,6 @@ A recording structure (a list) containing the header information and signal data
 Read data in the Suunto Data Format
 }
 \seealso{
-read.data, new.recording
-
 Other read_data: \code{\link{read.data.edf}};
   \code{\link{read.data.firstbeat}};
   \code{\link{read.data}}

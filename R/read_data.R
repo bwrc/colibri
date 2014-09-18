@@ -19,7 +19,7 @@
 read.data <- function(filename, format = NULL) {
 
     if (is.null(format)) {
-        file.extension <- rev(tolower(get.filename.parts(filename)))[1]
+        file.extension <- rev(tolower(get_filename_parts(filename)))[1]
 
         if (file.extension == "sdf")
             format <- "suunto"

@@ -24,7 +24,7 @@ read.block.event.data <- function(filename, data.format = NULL, casename = NULL,
 
     ## Try to determine the file format
     if (is.null(data.format)) {
-        file.extension <- tolower(get.filename.parts(filename)[2])
+        file.extension <- tolower(get_filename_parts(filename)[2])
 
         if (file.extension == "csv")
             data.format <- "csv"
@@ -133,7 +133,7 @@ read.dbtable.excel <- function(filename, sheetname = NULL, casename = NULL) {
 #' @family recording
 #' 
 #' @export
-block.to.seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%S") {
+block_to_seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%S") {
     if (is.null(block))
         block <- recording$conf$blocks
     
@@ -154,12 +154,12 @@ block.to.seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%
         block.s$stoptime <- zerotime.s + defactor(block$stoptime, type = "numeric")
 
     if (block$starttype == "timestamp") {
-        ts                <- str.to.timestamp(block$starttime, timeformat = timeformat)
+        ts                <- str_to_timestamp(block$starttime, timeformat = timeformat)
         block.s$starttime <- as.numeric(difftime(ts, time.start, units = "secs"))
     }
 
     if (block$starttype == "timestamp") {
-        ts                <- str.to.timestamp(block$stoptime, timeformat = timeformat)
+        ts                <- str_to_timestamp(block$stoptime, timeformat = timeformat)
         block.s$stoptime  <- as.numeric(difftime(ts, time.start, units = "secs"))
     }
 
@@ -189,7 +189,7 @@ block.to.seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%
 #' @family recording
 #' 
 #' @export
-create.block.structure <- function(recording, extra.factors = NULL) {
+create_block_structure <- function(recording, extra.factors = NULL) {
     blocks <- data.frame(blockid   = numeric(),
                          casename  = character(),
                           subject   = character(),
@@ -234,7 +234,7 @@ create.block.structure <- function(recording, extra.factors = NULL) {
 #' @family recording
 #' 
 #' @export
-create.block.simple <- function(starttime, starttype = "timestamp", stoptime, stoptype = "timestamp", tasktype = "none", part = NA, meas = NA, blockid = NA, subject = NA, casename = NA, recording = NULL) {
+create_block_simple <- function(starttime, starttype = "timestamp", stoptime, stoptype = "timestamp", tasktype = "none", part = NA, meas = NA, blockid = NA, subject = NA, casename = NA, recording = NULL) {
     if (! is.null(recording)) {
         subject <- recording$properties$subject
         casename <- recording$properties$casename
@@ -270,7 +270,7 @@ create.block.simple <- function(starttime, starttype = "timestamp", stoptime, st
 #' @family recording
 #' 
 #' @export
-add.block <- function(recording, block) {
+add_block <- function(recording, block) {
     if (nrow(recording$conf$blocks) == 0) {
         blockid <- 1
     } else {

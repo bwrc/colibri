@@ -14,8 +14,8 @@
 #' @family HRV geometric
 #' 
 #' @export
-analyse.geometric <- function(metric.list, ibi, t.ibi = NULL, settings) {
-    res <- lapply(metric.list, analyse.geometric.helper, ibi, settings)
+analyse_geometric <- function(metric.list, ibi, t.ibi = NULL, settings) {
+    res <- lapply(metric.list, analyse_geometric_helper, ibi, settings)
 }
 
 
@@ -30,13 +30,13 @@ analyse.geometric <- function(metric.list, ibi, t.ibi = NULL, settings) {
 #' @family HRV geometric
 #' 
 #' @keywords internal
-analyse.geometric.helper <- function(metric, x, settings) {
+analyse_geometric_helper <- function(metric, x, settings) {
 
     switch(metric,
-           sd1              = matrix(dimnames = list(metric, "value"), ibi.sd1(x)),
-           sd2              = matrix(dimnames = list(metric, "value"), ibi.sd2(x)),
-           triangular.index = matrix(dimnames = list(metric, "value"), ibi.triangular.index(x, binwidth = settings$geometric$triangular.index$binwidth)),
-           tinn             = matrix(dimnames = list(metric, "value"), ibi.tinn(x, binwidth = settings$geometric$tinn$binwidth))
+           sd1              = matrix(dimnames = list(metric, "value"), ibi_sd1(x)),
+           sd2              = matrix(dimnames = list(metric, "value"), ibi_sd2(x)),
+           triangular.index = matrix(dimnames = list(metric, "value"), ibi_triangular_index(x, binwidth = settings$geometric$triangular.index$binwidth)),
+           tinn             = matrix(dimnames = list(metric, "value"), ibi_tinn(x, binwidth = settings$geometric$tinn$binwidth))
            )
 }
 
@@ -50,7 +50,7 @@ analyse.geometric.helper <- function(metric, x, settings) {
 #' @family HRV geometric
 #' 
 #' @export
-ibi.sd1 <- function(ibi) {
+ibi_sd1 <- function(ibi) {
     sqrt(0.5 * var(diff(ibi)))
 }
 
@@ -64,7 +64,7 @@ ibi.sd1 <- function(ibi) {
 #' @family HRV geometric
 #'   
 #' @export
-ibi.sd2 <- function(ibi) {
+ibi_sd2 <- function(ibi) {
     sqrt(2 * (sd(ibi)^2) - 0.5 * var(diff(ibi)))
 }
 
@@ -85,7 +85,7 @@ ibi.sd2 <- function(ibi) {
 #' @family HRV geometric
 #'   
 #' @export
-ibi.triangular.index <- function(ibi, binwidth = 128) {
+ibi_triangular_index <- function(ibi, binwidth = 128) {
     ## Construct histogram
     tmp     <- hist(ibi, breaks = seq(from = min(ibi), to = (max(ibi) + (1000/binwidth)), by = (1000 / binwidth)), plot = FALSE)
     length(ibi) / max(tmp$counts)
@@ -103,7 +103,7 @@ ibi.triangular.index <- function(ibi, binwidth = 128) {
 #' @family HRV geometric
 #'   
 #' @export
-ibi.tinn <- function(ibi, binwidth = 128) {
+ibi_tinn <- function(ibi, binwidth = 128) {
     ## Construct histogram
     tmp     <- hist(ibi, breaks = seq(from = min(ibi), to = max(ibi)+(1000/binwidth), by = 1000/binwidth), plot = FALSE)
 
@@ -144,7 +144,7 @@ ibi.tinn <- function(ibi, binwidth = 128) {
 #' @return Nothing
 #' 
 #' @export
-plot.poincare <- function(ibi) {
+plot_poincare <- function(ibi) {
     N <- length(ibi)
     x <- ibi[1:(N-1)]
     y <- ibi[2:N]
@@ -154,8 +154,8 @@ plot.poincare <- function(ibi) {
     ym <- mean(y)
 
     ## Get the values for SD1 and SD2
-    sd1 <- ibi.sd1(ibi)
-    sd2 <- ibi.sd2(ibi)
+    sd1 <- ibi_sd1(ibi)
+    sd2 <- ibi_sd2(ibi)
 
     ## Calculate coordinates for the sd1 and sd2 lines
     sd2d  <- sqrt(2 * sd2^2 / sqrt(2))

@@ -12,7 +12,7 @@ read.data.firstbeat <- function(filename) {
     require(XML)
 
     ## Initialise the recording structure
-    recording  <- new.recording()
+    recording  <- new_recording()
 
     ## Read the IBI data
     datadir  <- tempdir()
@@ -32,12 +32,12 @@ read.data.firstbeat <- function(filename) {
     recording$properties$time.start.raw <- paste(start.date, start.time, sep = " ")
 
     start.time <- paste(paste(rev(strsplit(start.date, "[.]")[[1]]), sep ="", collapse = ""), "T", gsub(":", "", start.time), sep = "")
-    start.time <- str.to.timestamp(start.time, timeformat)
+    start.time <- str_to_timestamp(start.time, timeformat)
 
-    recording$properties$time.start     <- str.to.timestamp(start.time, timeformat)
+    recording$properties$time.start     <- str_to_timestamp(start.time, timeformat)
     
     ## Set the zerotime that anchors time operations on the recording
-    recording <- recording.set.zerotime(recording, recording$properties$time.start)
+    recording <- recording_set_zerotime(recording, recording$properties$time.start)
 
     ## Set additional attributes
     recording$properties$format         <- "fbe"
@@ -46,7 +46,7 @@ read.data.firstbeat <- function(filename) {
     recording$properties$device.version <- 1
 
     ## Read the ibi data and scale it to milliseconds
-    recording <- recording.set.ibi(recording, ibi)
+    recording <- recording_set_ibi(recording, ibi)
     
     recording
 

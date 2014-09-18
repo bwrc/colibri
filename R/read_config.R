@@ -17,7 +17,7 @@ read.config <- function(filename, config.format = NULL) {
 
     ## Try to determine the block file format
     if (is.null(config.format)) {
-        file.extension <- tolower(get.filename.parts(filename)[2])
+        file.extension <- tolower(get_filename_parts(filename)[2])
 
         if (file.extension == "csv")
             config.format <- "csv"

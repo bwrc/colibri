@@ -6,7 +6,7 @@
 #' @family recording
 #' 
 #' @export
-new.recording <- function() {
+new_recording <- function() {
     ## Create containers
     recording            <- list()
     recording$properties <- list()
@@ -61,7 +61,7 @@ new.recording <- function() {
 #' @family recording
 #' 
 #' @export
-recording.set.ibi <- function(recording, ibi, ibi.t = NULL) {
+recording_set_ibi <- function(recording, ibi, ibi.t = NULL) {
     ## Set the ibi
     recording$signal$ibi$data <- ibi
 
@@ -97,7 +97,7 @@ recording.set.ibi <- function(recording, ibi, ibi.t = NULL) {
 #' @family recording
 #' 
 #' @export
-recording.set.blocks <- function(recording, filename = NULL, casename = NULL) {
+recording_set_blocks <- function(recording, filename = NULL, casename = NULL) {
     if (is.null(filename))
         filename <- recording$properties$db.filename
 
@@ -119,7 +119,7 @@ recording.set.blocks <- function(recording, filename = NULL, casename = NULL) {
 #' @family recording
 #' 
 #' @export
-recording.set.events <- function(recording, filename = NULL, casename = NULL) {
+recording_set_events <- function(recording, filename = NULL, casename = NULL) {
     if (is.null(filename))
         filename <- recording$properties$db.filename
 
@@ -143,10 +143,10 @@ recording.set.events <- function(recording, filename = NULL, casename = NULL) {
 #' @family recording
 #' 
 #' @export
-recording.set.zerotime <- function(recording, timestamp = NULL) {
+recording_set_zerotime <- function(recording, timestamp = NULL) {
 
     if (is.null(timestamp))
-        timestamp <- recording.get.zerotime(recording)
+        timestamp <- recording_get_zerotime(recording)
 
     recording$properties$zerotime   <- timestamp
     recording$properties$zerotime.s <- as.numeric(difftime(timestamp, recording$properties$time.start, units = "secs"))
@@ -164,12 +164,12 @@ recording.set.zerotime <- function(recording, timestamp = NULL) {
 #' @family recording
 #' 
 #' @export
-recording.get.zerotime <- function(recording) {
+recording_get_zerotime <- function(recording) {
     if(is.null(recording$conf$events))
         stop("No event information. Cannot continue.")
     timeformat <- "%Y%m%dT%H%M%S"
     zerotime <- subset(recording$conf$events, eventtype = "zerotime", select = "timestamp", drop = TRUE)
-    zerotime <- str.to.timestamp(zerotime, timeformat)
+    zerotime <- str_to_timestamp(zerotime, timeformat)
     zerotime
 }
 
@@ -183,7 +183,7 @@ recording.get.zerotime <- function(recording) {
 #' @family recording
 #' 
 #' @export
-find.recording.overlap <- function(collection) {
+find_recording_overlap <- function(collection) {
     N <- length(collection)
     if (N < 2)
         stop("Need at least 2 recordings to find overlap. Cannot continue.")
@@ -216,11 +216,11 @@ find.recording.overlap <- function(collection) {
 #' @family recording
 #' 
 #' @export
-cut.recording <- function(recording, ts = NULL) {
+cut_recording <- function(recording, ts = NULL) {
     signals   <- names(recording$signal)
 
     for (s in signals) {
-        recording$signal[[s]]   <- extract.segment.timestamp(recording, ts, signal = s)
+        recording$signal[[s]]   <- extract_segment_timestamp(recording, ts, signal = s)
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]
     }
 
@@ -249,11 +249,11 @@ cut.recording <- function(recording, ts = NULL) {
 #' @family recording
 #' 
 #' @export
-cut.recording.s<- function(recording, ts = NULL) {
+cut_recording_s<- function(recording, ts = NULL) {
     signals   <- names(recording$signal)
 
     for (s in signals) {
-        recording$signal[[s]]   <- extract.segment.s(recording, ts, signal = s)
+        recording$signal[[s]]   <- extract_segment_s(recording, ts, signal = s)
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]
     }
 
@@ -282,11 +282,11 @@ cut.recording.s<- function(recording, ts = NULL) {
 #' @family recording
 #' 
 #' @export
-cut.recordings <- function(collection, ts) {
+cut_recordings <- function(collection, ts) {
     N <- length(collection)
 
     for (i in 1:N) {
-        collection[[i]] <- cut.recording(collection[[i]], ts)
+        collection[[i]] <- cut_recording(collection[[i]], ts)
     }
 
     collection
@@ -307,11 +307,11 @@ cut.recordings <- function(collection, ts) {
 #' @family recording
 #' 
 #' @export
-cut.recordings.s <- function(collection, ts) {
+cut_recordings_s <- function(collection, ts) {
     N <- length(collection)
 
     for (i in 1:N) {
-        collection[[i]] <- cut.recording.s(collection[[i]], ts)
+        collection[[i]] <- cut_recording.s(collection[[i]], ts)
     }
 
     collection
@@ -331,7 +331,7 @@ cut.recordings.s <- function(collection, ts) {
 #' @family recording
 #' 
 #' @export
-collect.results <- function(recording, format = "data.frame") {
+collect_results <- function(recording, format = "data.frame") {
     ## sanity check
     if ("results" %in% names(recording))
         if (length(recording$results) < 1)
@@ -359,7 +359,7 @@ collect.results <- function(recording, format = "data.frame") {
         out$segment    <- factor(as.numeric(data[,"segment"]))
 
         ## add metadata from the block information in the recording
-        resultrow.template <- generate.result.row(recording$conf$blocks)
+        resultrow.template <- generate_result_row(recording$conf$blocks)
         new.columns        <- setdiff(names(resultrow.template), names(out))
         out                <- merge(out, resultrow.template[,c(new.columns, "blockid")], by = "blockid")
     }
@@ -380,12 +380,12 @@ collect.results <- function(recording, format = "data.frame") {
 #' @family recording
 #' 
 #' @export
-collect.results.collection <- function(collection) {
+collect_results_collection <- function(collection) {
     ## container for the results
     out <- data.frame()
 
     for (recording in collection) {
-        out <- rbind(out, collect.results(recording, format = "data.frame"))
+        out <- rbind(out, collect_results(recording, format = "data.frame"))
     }
 
     out
@@ -402,13 +402,13 @@ collect.results.collection <- function(collection) {
 #' @family recording
 #' 
 #' @export
-add.segment.timestamp <- function(recording, results) {
+add_segment_timestamp <- function(recording, results) {
     for (i in levels(results$block)) {
         ind <- (results$block == as.numeric(as.character(i)))
         block.tmp <- subset(recording$conf$blocks, blockid == i)
         results$timestamp[ind] <- as.character(block.tmp$starttime)
     }
-    results$timestamp <- str.to.timestamp(results$timestamp)
+    results$timestamp <- str_to_timestamp(results$timestamp)
     results$timestamp <- results$timestamp + results$segmentid * (recording$conf$settings$segment.length / 2)
 
     results
@@ -423,7 +423,7 @@ add.segment.timestamp <- function(recording, results) {
 #' @family recording
 #' 
 #' @export
-save.recording <- function(recording, filename) {
+save_recording <- function(recording, filename) {
     saveRDS(recording, file = filename, compress = "xz")
 }
 
@@ -435,6 +435,6 @@ save.recording <- function(recording, filename) {
 #' @family recording
 #' 
 #' @export
-load.recording <- function(filename) {
+load_recording <- function(filename) {
     readRDS(filename)
 }

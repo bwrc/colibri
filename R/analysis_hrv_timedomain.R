@@ -10,9 +10,9 @@
 #' @family HRV time-domain
 #' 
 #' @export
-analyse.timedomain <- function(metric.list, settings, ibi, t.ibi = NULL) {
+analyse_timedomain <- function(metric.list, settings, ibi, t.ibi = NULL) {
 
-    res <- lapply(metric.list, analyse.timedomain.helper, ibi, settings)
+    res <- lapply(metric.list, analyse_timedomain_helper, ibi, settings)
 }
 
 
@@ -27,17 +27,17 @@ analyse.timedomain <- function(metric.list, settings, ibi, t.ibi = NULL) {
 #' @family HRV timey-domain
 #' 
 #' @keywords internal
-analyse.timedomain.helper <- function(metric, ibi, settings) {
+analyse_timedomain_helper <- function(metric, ibi, settings) {
 
     switch(metric,
-           mean    = matrix(dimnames = list(metric, "value"), ibi.mean(ibi)),
-           meanhr  = matrix(dimnames = list(metric, "value"), ibi.mean(ibi, type = "hr")),
-           stdev   = matrix(dimnames = list(metric, "value"), ibi.stdev(ibi)),
-           stdevhr = matrix(dimnames = list(metric, "value"), ibi.stdev(ibi, type = "hr")),
-           rmssd   = matrix(dimnames = list(metric, "value"), ibi.rmssd(ibi)),
-           var     = matrix(dimnames = list(metric, "value"), ibi.var(ibi)),
-           nnx     = ibi.pnnx.helper(ibi, settings$timedomain$parameters$pnnx, type = "number"),
-           pnnx    = ibi.pnnx.helper(ibi, settings$timedomain$parameters$pnnx, type = "percentage")
+           mean    = matrix(dimnames = list(metric, "value"), ibi_mean(ibi)),
+           meanhr  = matrix(dimnames = list(metric, "value"), ibi_mean(ibi, type = "hr")),
+           stdev   = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi)),
+           stdevhr = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi, type = "hr")),
+           rmssd   = matrix(dimnames = list(metric, "value"), ibi_rmssd(ibi)),
+           var     = matrix(dimnames = list(metric, "value"), ibi_var(ibi)),
+           nnx     = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "number"),
+           pnnx    = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "percentage")
            )
 }
 
@@ -52,7 +52,7 @@ analyse.timedomain.helper <- function(metric, ibi, settings) {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.mean <- function(ibi, type = "ibi") {
+ibi_mean <- function(ibi, type = "ibi") {
     if (type == "ibi")
         res <- mean(ibi)
     
@@ -72,7 +72,7 @@ ibi.mean <- function(ibi, type = "ibi") {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.rmssd <- function(ibi) {
+ibi_rmssd <- function(ibi) {
     sqrt(sum(diff(ibi)^2) / (length(ibi) - 1))
 }
 
@@ -86,7 +86,7 @@ ibi.rmssd <- function(ibi) {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.var <- function(ibi) {
+ibi_var <- function(ibi) {
     var(ibi)
 }
 
@@ -101,7 +101,7 @@ ibi.var <- function(ibi) {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.stdev <- function(ibi, type = "ibi") {
+ibi_stdev <- function(ibi, type = "ibi") {
     if (type == "ibi")
         res <- sd(ibi)
 
@@ -125,16 +125,16 @@ ibi.stdev <- function(ibi, type = "ibi") {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.pnnx.helper <- function(ibi, pnnx.list, type = "percentage") {
+ibi_pnnx_helper <- function(ibi, pnnx.list, type = "percentage") {
 
     res           <- matrix(data = NA, ncol = 1, nrow = length(pnnx.list))
     rownames(res) <- paste("pnnx", pnnx.list, sep = "")
     colnames(res) <- "value"
 
     if (type == "percentage")
-        tmp.func <- ibi.pnnx
+        tmp.func <- ibi_pnnx
     if (type == "number")
-        tmp.func <- ibi.nnx
+        tmp.func <- ibi_nnx
     
     for (i in seq(length(pnnx.list))) {
         res[i,] <- tmp.func(ibi, x = pnnx.list[i])
@@ -154,7 +154,7 @@ ibi.pnnx.helper <- function(ibi, pnnx.list, type = "percentage") {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.nnx <- function(ibi, x = 50) {
+ibi_nnx <- function(ibi, x = 50) {
     sum(abs(diff(ibi)) >= x)
 }
 
@@ -169,6 +169,6 @@ ibi.nnx <- function(ibi, x = 50) {
 #' @family HRV time-domain
 #' 
 #' @keywords internal
-ibi.pnnx <- function(ibi, x = 50) {
-    100 * ibi.nnx(ibi, x) / length(ibi)
+ibi_pnnx <- function(ibi, x = 50) {
+    100 * ibi_nnx(ibi, x) / length(ibi)
 }

@@ -4,6 +4,7 @@
 #'
 #' @param recording A recording structure
 #' @param settings The settings structure used for HRV analysis (see \code{\link{settings.template}}).
+#' @param signal A string or a list with the names of the signals to analyze.
 #' @param analysis.pipeline.function The pipeline function used in the
 #' analysis, i.e., a funtion containing the individual analysis steps.
 #'
@@ -12,8 +13,8 @@
 #' @family pipeline
 #'
 #' @export
-analyze.recording.collection <- function(recording.collection, settings, analysis.pipeline.function = analysis.pipeline) {
-    lapply(recording.collection, function(i) analyze.recording(i, settings, analysis.pipeline))
+analyze_recording_collection <- function(recording.collection, settings, signal, analysis.pipeline.function) {
+    lapply(recording.collection, function(i) analyze_recording(i, settings, signal, analysis.pipeline.function))
 }
 
 
@@ -23,6 +24,7 @@ analyze.recording.collection <- function(recording.collection, settings, analysi
 #'
 #' @param recording A recording structure
 #' @param settings The settings structure used for HRV analysis (see \code{\link{settings.template}}).
+#' @param signal A string or a list with the names of the signals to analyze.
 #' @param analysis.pipeline.function The pipeline function used in the
 #' analysis, i.e., a funtion containing the individual analysis steps.
 #'
@@ -31,12 +33,12 @@ analyze.recording.collection <- function(recording.collection, settings, analysi
 #' @family pipeline
 #'
 #' @export
-analyze.recording <- function(recording, settings, analysis.pipeline.function = analysis.pipeline) {
+analyze_recording <- function(recording, settings, signal, analysis.pipeline.function) {
     n.blocks          <- nrow(recording$conf$blocks)
     
     for (i in seq.int(n.blocks)) {
         block     <- recording$conf$blocks[i,]
-        recording <- analyze.block(recording, settings, block, analysis.pipeline.function = analysis.pipeline.function)
+        recording <- analyze_block(recording, settings, signal, block, analysis.pipeline.function = analysis.pipeline.function)
     }
 
     recording
@@ -48,8 +50,10 @@ analyze.recording <- function(recording, settings, analysis.pipeline.function = 
 #' Analyze the results in a particular block.
 #' 
 #' @param recording A recording structure
-#' @param settings The settings structure used for HRV analysis (see \code{\link{settings.template}}).
+#' @param settings The settings structure used for the analysis (see e.g., \code{\link{settings_template_hrv}}).
+#' @param signal A string or a list with the names of the signals to analyze.
 #' @param block A block structure.
+#' @param signal The name 
 #' @param analysis.pipeline.function The pipeline function used in the
 #' analysis, i.e., a funtion containing the individual analysis steps.
 #'
@@ -58,19 +62,19 @@ analyze.recording <- function(recording, settings, analysis.pipeline.function = 
 #' @family pipeline
 #'
 #' @export
-analyze.block <- function(recording, settings, block, analysis.pipeline.function) {
-    block.s       <- block.to.seconds(recording, block = block)
-    data.segments <- generate.segments.from.block(block.s, settings)
+analyze_block <- function(recording, settings, signal, block, analysis.pipeline.function) {
+    block.s       <- block_to_seconds(recording, block = block)
+    data.segments <- generate_segments_from_block(block.s, settings)
     nsegments     <- nrow(data.segments)
 
     ## Now loop over the segments applying the analysis pipeline to each segment
     res.list <- vector(mode = "list", length = nsegments)
 
-    for (i in seq(nsegments)) {
+    for (i in seq.int(nsegments)) {
         ## Extract the data corresponding to this segment
-        res           <- extract.segment.s(recording, data.segments[i,], signal = "ibi")
+        res           <- extract_segment_s(recording, data.segments[i,], signal = signal)
 
-        res.seg       <- analysis.pipeline.ibi(settings, ibi = res$data, t.ibi = res$t)
+        res.seg       <- analysis.pipeline.function(settings, res)
         res.seg       <- do.call(rbind, res.seg)
 
         tmp           <- matrix(ncol = 2, nrow = nrow(res.seg))
@@ -89,9 +93,9 @@ analyze.block <- function(recording, settings, block, analysis.pipeline.function
 }
 
 
-#' #' Calculate results.
+#' Calculate results.
 #'
-#' This function defines the analysis pipeline. If new analysis
+#' This function defines the analysis pipeline for HRV analysis. If new analysis
 #' functions are incorporated these analysis steps should be added to
 #' this function as well.
 #'
@@ -104,25 +108,29 @@ analyze.block <- function(recording, settings, block, analysis.pipeline.function
 #' @family pipeline
 #'
 #' @export
-analysis.pipeline.ibi <- function(settings, ibi, t.ibi) {
+analysis_pipeline_ibi <- function(settings, data) {
+    ## Unpack the data
+    ibi   <- data$data
+    t.ibi <- data$t
+
     ## container for results
     res <- c()
     
     ## Time domain analysis
     if (settings$analysis$time)
-        res <- c(res, analyse.timedomain(settings$timedomain$metric.list, settings, ibi))
+        res <- c(res, analyse_timedomain(settings$timedomain$metric.list, settings, ibi))
 
     ## Frequency domain analysis
     if (settings$analysis$frequency)
-        res <- c(res, analyse.frequencydomain(settings$frequencydomain$metric.list, ibi, t.ibi, settings))
+        res <- c(res, analyse_frequencydomain(settings$frequencydomain$metric.list, ibi, t.ibi, settings))
     
     ## Geometric analysis
     if (settings$analysis$geometric)
-        res <- c(res, analyse.geometric(settings$geometric$metric.list, ibi, t.ibi, settings))
+        res <- c(res, analyse_geometric(settings$geometric$metric.list, ibi, t.ibi, settings))
 
     ## Nonlinear analysis
     if (settings$analysis$frequency)
-        res <- c(res, analyse.nonlinear(settings$nonlinaer$metric.list, ibi, t.ibi, settings))
+        res <- c(res, analyse_nonlinear(settings$nonlinaer$metric.list, ibi, t.ibi, settings))
 
     ## Return results
     res

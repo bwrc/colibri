@@ -18,10 +18,10 @@
 #' @family visualizations
 #'
 #' @export
-plot.block <- function(recording, blockid, signal, type = "seconds", interval = 10, new.plot = TRUE, filename = NULL) {
+plot_block <- function(recording, blockid, signal, type = "seconds", interval = 10, new.plot = TRUE, filename = NULL) {
     ## Should the figure be saved
     if (! is.null(filename)) {
-        format <- get.file.extension(filename)
+        format <- get_file_extension(filename)
 
         if (format == "pdf")
             pdf(file = filename, width = 29.7 / 2.54, height = 21.0 / 2.54, paper = "a4r")
@@ -37,7 +37,7 @@ plot.block <- function(recording, blockid, signal, type = "seconds", interval = 
 
     blockid.tmp <- blockid
     block       <- subset(recording$conf$blocks, blockid == blockid.tmp)
-    tmp         <- extract.segment.block(recording, blockid = blockid.tmp, signal = signal)
+    tmp         <- extract_segment_block(recording, blockid = blockid.tmp, signal = signal)
 
     ## unit for y-axis label
     if ("unit" %in% names(recording$signal[[signal]])) {
@@ -64,7 +64,7 @@ plot.block <- function(recording, blockid, signal, type = "seconds", interval = 
 
     if (type == "timestamp") {
         ts <- seq(from = min(tmp$t), to = max(tmp$t), by = 60)
-        tt <- as.POSIXct(tmp$t + str.to.timestamp(block$starttime))
+        tt <- as.POSIXct(tmp$t + str_to_timestamp(block$starttime))
         lb <-format.POSIXct(seq(min(tt), max(tt), by = "min"), format = "%H:%M")
         axis(1, at = ts, labels = lb)
         mtext(text = "time", side = 1, line = 3)
@@ -94,10 +94,10 @@ plot.block <- function(recording, blockid, signal, type = "seconds", interval = 
 #' @family visualizations
 #'
 #' @export
-plot.all.blocks <- function(recording, signal, type = "seconds", interval = 15, new.plot = TRUE, filename = NULL) {
+plot_all_blocks <- function(recording, signal, type = "seconds", interval = 15, new.plot = TRUE, filename = NULL) {
     ## Should the figure be saved
     if (! is.null(filename)) {
-        format <- get.file.extension(filename)
+        format <- get_file_extension(filename)
 
         if (format == "pdf")
             pdf(file = filename, width = 29.7 / 2.54, height = 21.0 / 2.54, paper = "a4r")
@@ -132,7 +132,7 @@ plot.all.blocks <- function(recording, signal, type = "seconds", interval = 15, 
 
     ## Plot the block limits and the task types
     for (i in seq.int(nrow(recording$conf$blocks))) {
-        block <- block.to.seconds(recording, recording$conf$blocks[i,])
+        block <- block_to_seconds(recording, recording$conf$blocks[i,])
 
         abline(v = block$starttime, col = "red", lty = 1)
         abline(v = block$stoptime, col = "red", lty = 1)
@@ -188,10 +188,10 @@ plot.all.blocks <- function(recording, signal, type = "seconds", interval = 15, 
 #' @family visualizations
 #' 
 #' @export
-check.rr.detection <- function(recording, blockid, ecg.signal.name = "ECG", ibi.signal.name = "ibi.amp", type = "seconds", interval = 10, new.plot = TRUE, filename = NULL) {
+plot_check_rr_detection <- function(recording, blockid, ecg.signal.name = "ECG", ibi.signal.name = "ibi.amp", type = "seconds", interval = 10, new.plot = TRUE, filename = NULL) {
     ## Should the figure be saved
     if (! is.null(filename)) {
-        format <- get.file.extension(filename)
+        format <- get_file_extension(filename)
 
         if (format == "pdf")
             pdf(file = filename, width = 29.7 / 2.54, height = 21.0 / 2.54, paper = "a4r")
@@ -207,8 +207,8 @@ check.rr.detection <- function(recording, blockid, ecg.signal.name = "ECG", ibi.
 
     blockid.tmp <- blockid
     block       <- subset(recording$conf$blocks, blockid == blockid.tmp)
-    tmp.ecg     <- extract.segment.block(recording, blockid = blockid.tmp, signal = ecg.signal.name)
-    tmp.ibi     <- extract.segment.block(recording, blockid = blockid.tmp, signal = ibi.signal.name)
+    tmp.ecg     <- extract_segment_block(recording, blockid = blockid.tmp, signal = ecg.signal.name)
+    tmp.ibi     <- extract_segment_block(recording, blockid = blockid.tmp, signal = ibi.signal.name)
 
     ## unit for y-axis label
     signal <- ecg.signal.name
@@ -244,7 +244,7 @@ check.rr.detection <- function(recording, blockid, ecg.signal.name = "ECG", ibi.
 
     if (type == "timestamp") {
         ts <- seq(from = min(tmp.ecg$t), to = max(tmp.ecg$t), by = 60)
-        tt <- as.POSIXct(tmp.ecg$t + str.to.timestamp(block$starttime))
+        tt <- as.POSIXct(tmp.ecg$t + str_to_timestamp(block$starttime))
         lb <-format.POSIXct(seq(min(tt), max(tt), by = "min"), format = "%H:%M")
         axis(1, at = ts, labels = lb)
         mtext(text = "time", side = 1, line = 3)
@@ -274,7 +274,7 @@ check.rr.detection <- function(recording, blockid, ecg.signal.name = "ECG", ibi.
 #' @family visualizations
 #' 
 #' @export
-plot.ecg.r.peak <- function(recording, filename, n = 60, signal = "ECG", signal.color = "blue",
+plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.color = "blue",
                             signal2 = NULL, signal2.color = "red", signal2.pch = 10, signal2.cex = 2) {
 
     require(gplots)
@@ -285,7 +285,7 @@ plot.ecg.r.peak <- function(recording, filename, n = 60, signal = "ECG", signal.
 
     ## blocks
     if (nrow(recording$conf$blocks) > 0) {
-        blocks <- do.call(rbind,  lapply(seq.int(nrow(recording$conf$blocks)), function(i) block.to.seconds(recording, recording$conf$blocks[i,])))
+        blocks <- do.call(rbind,  lapply(seq.int(nrow(recording$conf$blocks)), function(i) block_to_seconds(recording, recording$conf$blocks[i,])))
     }
 
     pdf(filename, width = (21.0 / 2.54), height = (29.7 / 2.54), paper = "a4")
@@ -362,7 +362,7 @@ plot.ecg.r.peak <- function(recording, filename, n = 60, signal = "ECG", signal.
 #' @family visualizations
 #' 
 #' @export
-plot.metric <- function(recording, metric, filename, new.plot = TRUE, blockid = NULL) {
+plot_metric <- function(recording, metric, filename, new.plot = TRUE, blockid = NULL) {
     if (! "results" %in% names(recording))
         stop("Results structure not found in the recording. Cannot continue!")
 
@@ -374,7 +374,7 @@ plot.metric <- function(recording, metric, filename, new.plot = TRUE, blockid = 
 
     ## Should the figure be saved
     if (! is.null(filename)) {
-        format <- get.file.extension(filename)
+        format <- get_file_extension(filename)
 
         if (format == "pdf")
             pdf(file = filename, width = 29.7 / 2.54, height = 21.0 / 2.54, paper = "a4r")

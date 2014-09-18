@@ -41,9 +41,9 @@ http://www.ltrr.arizona.edu/~dmeko/notes_6.pdf
 https://onlinecourses.science.psu.edu/stat510/?q=book/export/html/57
 http://reference.wolfram.com/applications/timeseries/UsersGuideToTimeSeries/SpectralAnalysis/1.8.4.html
 
-Other HRV frequency-domain: \code{\link{analyse.frequencydomain.helper}};
-  \code{\link{analyse.frequencydomain}};
-  \code{\link{ibi.band.custom}};
-  \code{\link{ibi.band.standard}}
+Other HRV frequency-domain: \code{\link{analyse_frequencydomain_helper}};
+  \code{\link{analyse_frequencydomain}};
+  \code{\link{ibi_band_custom}};
+  \code{\link{ibi_band_standard}}
 }
 

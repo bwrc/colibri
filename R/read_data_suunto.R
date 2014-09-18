@@ -4,15 +4,12 @@
 #'
 #' @return A recording structure (a list) containing the header information and signal data.
 #' 
-#' @seealso read.data, new.recording
-#' 
-#'
 #' @family read_data
 #'
 #' @export
 read.data.suunto <- function(filename) {
     ## Initialise the recording structure
-    recording <- new.recording()
+    recording <- new_recording()
 
     ## Process the header
     header <- scan(filename, skip = 1, nlines = 7, what = "character", sep = "\n", quiet = TRUE)
@@ -33,7 +30,7 @@ read.data.suunto <- function(filename) {
                 timeformat <- timeformat.2
             }
             recording$properties$time.start.raw <- line[2]
-            recording$properties$time.start     <- str.to.timestamp(line[2], timeformat)
+            recording$properties$time.start     <- str_to-timestamp(line[2], timeformat)
         }
 
         if (tolower(line[1]) == "endtime") {
@@ -45,7 +42,7 @@ read.data.suunto <- function(filename) {
             }
 
             recording$properties$time.stop.raw <- line[2]
-            recording$properties$time.stop     <- str.to.timestamp(line[2], timeformat)
+            recording$properties$time.stop     <- str_to_timestamp(line[2], timeformat)
         }
 
         if (tolower(line[1]) == "name")
@@ -59,11 +56,11 @@ read.data.suunto <- function(filename) {
     recording$properties$device.version <- 1
 
     ## Set the zerotime that anchors time operations on the recording
-    recording <- recording.set.zerotime(recording, recording$properties$time.start)
+    recording <- recording_set_zerotime(recording, recording$properties$time.start)
 
     ## Read the ibi data and scale it to milliseconds
     ibi       <- scan(filename, skip = 9, quiet = TRUE)
-    recording <- recording.set.ibi(recording, ibi)
+    recording <- recording_set_ibi(recording, ibi)
 
     recording
 }

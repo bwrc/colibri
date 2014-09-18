@@ -14,8 +14,8 @@
 #' @family HRV nonlinear
 #' 
 #' @export
-analyse.nonlinear <- function(metric.list, ibi, t.ibi = NULL, settings) {
-    res <- lapply(metric.list, analyse.nonlinear.helper, ibi, settings)
+analyse_nonlinear <- function(metric.list, ibi, t.ibi = NULL, settings) {
+    res <- lapply(metric.list, analyse_nonlinear_helper, ibi, settings)
 }
 
 
@@ -30,12 +30,12 @@ analyse.nonlinear <- function(metric.list, ibi, t.ibi = NULL, settings) {
 #' @family HRV nonlinear
 #' 
 #' @keywords internal
-analyse.nonlinear.helper <- function(metric, x, settings) {
+analyse_nonlinear_helper <- function(metric, x, settings) {
 
     switch(metric,
 
-           sampen = matrix(dimnames = list(metric, "value"), ibi.entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "approximate")),
-           apen   = matrix(dimnames = list(metric, "value"), ibi.entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "sample"))
+           sampen = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "approximate")),
+           apen   = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "sample"))
 
            )
 }
@@ -52,7 +52,7 @@ analyse.nonlinear.helper <- function(metric, x, settings) {
 #' @family HRV nonlinear
 #' 
 #' @export
-ibi.entropy <- function(x, embedding.dimension = 2, type = NULL) {
+ibi_entropy <- function(x, embedding.dimension = 2, type = NULL) {
     if (is.null(type))
         stop("Entropy type not defined.")
 
