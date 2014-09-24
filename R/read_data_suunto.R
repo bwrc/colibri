@@ -30,7 +30,7 @@ read.data.suunto <- function(filename) {
                 timeformat <- timeformat.2
             }
             recording$properties$time.start.raw <- line[2]
-            recording$properties$time.start     <- str_to-timestamp(line[2], timeformat)
+            recording$properties$time.start     <- str_to_timestamp(line[2], timeformat)
         }
 
         if (tolower(line[1]) == "endtime") {
