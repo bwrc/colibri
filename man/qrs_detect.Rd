@@ -22,6 +22,7 @@ R-peak detection
 \seealso{
 Other HRV: \code{\link{detect_artifacts_xu}};
   \code{\link{plot_artifacts}};
-  \code{\link{qrs_interpolate}}
+  \code{\link{qrs_interpolate}};
+  \code{\link{remove_ibi_artifacts}}
 }
 

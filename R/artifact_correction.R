@@ -13,7 +13,7 @@
 #' @family HRV
 #' 
 #' @export
-remove_ibi_artifacts(recording, signal = "ibi") {
+remove_ibi_artifacts <- function(recording, signal = "ibi") {
     ## Remove the artifacts
     ind.artifact                    <- detect_artifacts_xu(recording$signal[[signal]]$data)
     recording$signal[[signal]]$data <- recording$signal[[signal]]$data[-ind.artifact]

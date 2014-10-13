@@ -25,7 +25,7 @@ Other utilities: \code{\link{defactor}};
   \code{\link{generate_segments_from_block}};
   \code{\link{generate_segments}};
   \code{\link{get_filename_parts}};
-  \code{\link{ibi_from_ecg}};
+  \code{\link{hr_from_ibi}}; \code{\link{ibi_from_ecg}};
   \code{\link{integrate_power}};
   \code{\link{replicate_df_row}};
   \code{\link{seconds_to_indices}};

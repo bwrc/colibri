@@ -23,6 +23,7 @@ Xu, X., Schuckers, S.: Automatic Detection of Artifacts in Heart
 }
 \seealso{
 Other HRV: \code{\link{plot_artifacts}};
-  \code{\link{qrs_detect}}; \code{\link{qrs_interpolate}}
+  \code{\link{qrs_detect}}; \code{\link{qrs_interpolate}};
+  \code{\link{remove_ibi_artifacts}}
 }
 

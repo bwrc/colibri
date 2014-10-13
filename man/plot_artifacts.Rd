@@ -19,6 +19,7 @@ Artifact detection is performed using the method presented by Xu and Schuckers
 }
 \seealso{
 Other HRV: \code{\link{detect_artifacts_xu}};
-  \code{\link{qrs_detect}}; \code{\link{qrs_interpolate}}
+  \code{\link{qrs_detect}}; \code{\link{qrs_interpolate}};
+  \code{\link{remove_ibi_artifacts}}
 }
 

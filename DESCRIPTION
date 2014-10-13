@@ -1,5 +1,5 @@
 Package: colibri
-Version: 0.1.0
+Version: 0.1.1
 Date: 09.09.2014
 Title: Platform for automating analyses of physiological time series in R.
 Description: 

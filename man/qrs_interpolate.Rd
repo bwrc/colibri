@@ -28,6 +28,7 @@ Daskalov, I and Christov, I. (1997) Improvement of resolution in measurement of 
 }
 \seealso{
 Other HRV: \code{\link{detect_artifacts_xu}};
-  \code{\link{plot_artifacts}}; \code{\link{qrs_detect}}
+  \code{\link{plot_artifacts}}; \code{\link{qrs_detect}};
+  \code{\link{remove_ibi_artifacts}}
 }
 
