@@ -110,9 +110,9 @@ read.dbtable.excel <- function(filename, sheetname = NULL, casename = NULL) {
 
     ## Convert dataid and blockid to numeric
     if ("dataid" %in% names(data))
-        data$dataid  <- as.numeric(data$dataid)
+        data$dataid  <- defactor(data$dataid, type = "numeric")
     if ("blockid" %in% names(data))
-        data$blockid <- as.numeric(data$blockid)
+        data$blockid <- defactor(data$blockid, type = "numeric")
     ## data$starttime <- as.character(data$starttime)
     ## data$stoptime  <- as.character(data$stoptime)
 

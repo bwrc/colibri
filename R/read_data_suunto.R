@@ -11,9 +11,18 @@ read.data.suunto <- function(filename) {
     ## Initialise the recording structure
     recording <- new_recording()
 
-    ## Process the header
-    header <- scan(filename, skip = 1, nlines = 7, what = "character", sep = "\n", quiet = TRUE)
+    ## Scan for the header
+    f <- file(filename, open = "r")
 
+    header <- list()
+    i <- 1
+
+    while ((header[i] <- readLines(f, n = 1) )!= "[CUSTOM1]")
+        i <- i + 1
+
+    close(f)
+
+  
     ## Determine the time format
     timeformat.1 <- "%d.%m.%Y %H:%M.%S"
     timeformat.2 <- "%d.%m.%Y %H:%M:%S"
@@ -59,8 +68,12 @@ read.data.suunto <- function(filename) {
     recording <- recording_set_zerotime(recording, recording$properties$time.start)
 
     ## Read the ibi data and scale it to milliseconds
-    ibi       <- scan(filename, skip = 9, quiet = TRUE)
+    ibi       <- scan(filename, skip = length(header), quiet = TRUE)
     recording <- recording_set_ibi(recording, ibi)
 
+    ## Calculate the stop time if it is missing
+    if (is.na(recording$properties$time.stop.raw))
+        recording$properties$time.stop <- recording$properties$time.start + (sum(ibi) / 1000)
+    
     recording
 }

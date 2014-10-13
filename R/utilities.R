@@ -1,11 +1,11 @@
 #' Separate the filename and the file extenions
 #'
 #' @param filename A filename with an extension.
-#' 
+#'
 #' @return A list containing the filename and the file extension.
 #'
 #' @family utilities
-#' 
+#'
 #' @keywords internal
 get_filename_parts <- function(filename) {
     unlist(strsplit(basename(filename), "[.]"))
@@ -15,11 +15,11 @@ get_filename_parts <- function(filename) {
 #' Get the file extension.
 #'
 #' @param filename A filename with an extension.
-#' 
+#'
 #' @return The file extension.
 #'
 #' @family utilities
-#' 
+#'
 #' @keywords internal
 get_file_extension <- function(filename) {
     rev(tolower(get_filename_parts(filename)))[1]
@@ -30,11 +30,11 @@ get_file_extension <- function(filename) {
 #'
 #' @param s A string containing a timestamp.
 #' @param timeformat The timeformat used to parse the string. Default is "\%Y\%m\%dT\%H\%M\%S".
-#' 
+#'
 #' @return A timestamp.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
     if (is.null(timeformat))
@@ -47,11 +47,11 @@ str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
 #'
 #' @param x A factor
 #' @param type A string indicating the type of the factor: "numeric" (default) or "string).
-#' 
+#'
 #' @return A string representation of the factor.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 defactor <- function(x, type = "numeric") {
     switch(type,
@@ -70,13 +70,13 @@ defactor <- function(x, type = "numeric") {
 #' \code{signal} corresponding to the timestamp should be
 #' returned. Optional, default is FALSE.
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return The number of seconds corresponding to the timestamp, or if
 #' return.indices = TRUE, a two-element list containing the seconds
 #' and the indices corresponding to the timestamp.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 timestamp_to_seconds <- function(recording, t0, timeformat = "%Y%m%dT%H%M%S", return.indices = FALSE, signal = NULL) {
     ## Calculate differences in seconds
@@ -116,13 +116,13 @@ timestamp_to_seconds <- function(recording, t0, timeformat = "%Y%m%dT%H%M%S", re
 #' \code{signal} corresponding to the time intervalshould be
 #' returned. Optional, default is FALSE.
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return A two-element list with The number of seconds corresponding to the start and stop timestamp, or if
 #' return.indices = TRUE, a four-element list containing the seconds
 #' and the indices corresponding to the time interval.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 timeintervals_to_seconds <- function(recording, t0, t1, timeformat = NULL, return.indices = FALSE, signal = NULL) {
     ## Some sanity checks
@@ -160,11 +160,11 @@ timeintervals_to_seconds <- function(recording, t0, t1, timeformat = NULL, retur
 #' @param t0 The start in seconds, from the start of the recording.
 #' @param t1 The stop timestamp (as a string or as a POSIXct timestamp). Optional, default is NULL
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return The index corresponding to t0, or if t1 is also given, a two-element list with indices corresponding to t0 and t1.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 seconds_to_indices <- function(recording, t0, t1 = NULL, signal = NULL) {
     if (is.null(signal))
@@ -188,11 +188,11 @@ seconds_to_indices <- function(recording, t0, t1 = NULL, signal = NULL) {
 #' @param ind1 Start index or a two-element list giving the start and stop index.
 #' @param ind2 Stop index. Optional, default is NULL, in which case ind1 must a two-element list.
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return A named list with the fields "data" and "t" from \code{signal} corresponding to the given indices.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 extract_segment <- function(recording, ind1, ind2 = NULL, signal = NULL) {
     if (is.null(signal))
@@ -206,8 +206,8 @@ extract_segment <- function(recording, ind1, ind2 = NULL, signal = NULL) {
     out           <- recording$signal[[signal]]
     out[["data"]] <- recording$signal[[signal]]$data[ind1:ind2]
     out[["t"]]    <- recording$signal[[signal]]$t[ind1:ind2]
-    
-    out    
+
+    out
 
 }
 
@@ -218,11 +218,11 @@ extract_segment <- function(recording, ind1, ind2 = NULL, signal = NULL) {
 #' @param t0 Start time (in seconds) or a two-element list giving the start and stop time.
 #' @param t1 Stop time. Optional, default is NULL, in which case ind1 must a two-element list.
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return A named list with the fields "data" and "t" from \code{signal} corresponding to the given times.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 extract_segment_s <- function(recording, t0, t1, signal = NULL) {
     if (is.null(signal))
@@ -244,11 +244,11 @@ extract_segment_s <- function(recording, t0, t1, signal = NULL) {
 #' @param ts0 Start timestamp or a two-element list giving the start and stop timestamps.
 #' @param ts1 Stop timestamp. Optional, default is NULL, in which case ind1 must a two-element list.
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return A named list with the fields "data" and "t" from \code{signal} corresponding to the given timestamps.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 extract_segment_timestamp <- function(recording, ts0, ts1 = NULL, signal = NULL) {
     if (is.null(signal))
@@ -270,11 +270,11 @@ extract_segment_timestamp <- function(recording, ts0, ts1 = NULL, signal = NULL)
 #' @param recording A recording structure.
 #' @param blockid A numeric block ID.
 #' @param signal A signal name found in the recording. Optional, default is NULL.
-#' 
+#'
 #' @return A named list with the fields "data" and "t" from \code{signal} corresponding to the given block ID.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 extract_segment_block <- function(recording, blockid, signal = NULL) {
     if (is.null(signal))
@@ -315,13 +315,13 @@ extract_segment_block <- function(recording, blockid, signal = NULL) {
 #' @param block A block structure
 #' @param settings The settings structure used for HRV analysis.
 #' @param tolerance The tolerance of the last segment length in seconds. Optional, default is 1.
-#' 
+#'
 #' @return A two-column matrix with the start time (in seconds) of
 #' each segment in the first column and the stop time (in seconds) in
 #' the second column.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 generate_segments_from_block <- function(block, settings, tolerance = 1) {
     generate_segments(block$starttime, block$stoptime, segment.length = settings$segment.length, segment.overlap = settings$segment.overlap)
@@ -343,13 +343,13 @@ generate_segments_from_block <- function(block, settings, tolerance = 1) {
 #' @param time.stop A stop time in seconds.
 #' @param blockid A numeric block ID.
 #' @param tolerance The tolerance of the last segment length in seconds. Optional, default is 1.
-#' 
+#'
 #' @return A two-column matrix with the start time (in seconds) of
 #' each segment in the first column and the stop time (in seconds) in
 #' the second column.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 generate_segments <- function(time.start, time.stop, segment.length, segment.overlap, tolerance = 1) {
 
@@ -382,11 +382,11 @@ generate_segments <- function(time.start, time.stop, segment.length, segment.ove
 #' Generate a result row to be used as a template for the results, based on the given block.
 #'
 #' @param block A block structure.
-#' 
+#'
 #' @return A data frame row to be used as a template for results.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 generate_result_row <- function(block) {
     drop.column.list <- c("dataid", "starttype", "starttime", "stoptype", "stoptime")
@@ -401,11 +401,11 @@ generate_result_row <- function(block) {
 #'
 #' @param row A data frame row.
 #' @param N An integer giving the number of times the data frame row should be repeated.
-#' 
+#'
 #' @return A data frame with N rows.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 replicate_df_row <- function(row, N) {
     row[rep(seq_len(nrow(row)), N), ]
@@ -418,11 +418,11 @@ replicate_df_row <- function(row, N) {
 #' @param p A vector of power values corresponding to the frequency values.
 #' @param fmin The minimum frequency value.
 #' @param fmax The maximum frequency value.
-#' 
+#'
 #' @return The integrated power.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 integrate_power <- function(f, p, fmin, fmax) {
     if (length(fmin) == 2) {
@@ -450,11 +450,11 @@ integrate_power <- function(f, p, fmin, fmax) {
 #' @param recording A recording structure.
 #' @param signal A signal name found in the recording. Optional, default is "ECG".
 #' @param interpolate.qrs Should the position of the R-peak be interpolated. See \code{\link{qrs_interpolate}} for details.
-#' 
+#'
 #' @return The recording structure with the new signals "ibi" and "ibi.amp" added.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 ibi_from_ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE) {
     r.peaks   <- qrs_detect(recording$signal[[signal]][["data"]], recording$signal[[signal]][["samplingrate"]], interpolate = interpolate.qrs)
@@ -462,7 +462,7 @@ ibi_from_ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE) {
 
     ibi.t <- r.peaks[,1] / recording$signal$ECG$samplingrate
     ibi.t <- ibi.t[-length(ibi)]
-    
+
     recording <- recording_set_ibi(recording, ibi = ibi, ibi.t = ibi.t)
 
     recording$signal$ibi.amp$data <- r.peaks[,2]
@@ -472,15 +472,38 @@ ibi_from_ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE) {
 }
 
 
+#' Add a time series with the instantaneous heart rate to a recording.
+#'
+#' @param recording A recording structure.
+#' @param signal A signal name containing interbeat intervals in the recording. Optional, default is "ibi".
+#'
+#' @return The recording structure with the new signal "hr" added.
+#'
+#' @family utilities
+#'
+#' @export
+hr_from_ibi <- function(recording, signal = "ibi") {
+    if (signal %in% names(recording$signal)) {
+        recording$signal$hr$data <- 60e3 / recording$signal$ibi$data
+        recording$signal$hr$t    <- recording$signal$ibi$t
+        recording$signal$hr$unit <- "bpm"
+    } else {
+        stop("Signal name not found!")
+    }
+
+    recording
+}
+
+
 #' Ensure that a directory path exists. If the given path does not exist, it is created.
 #'
 #' @param x A path
 #' @param recursive Boolean indicating whether the path should be created recursively. Default is FALSE.
-#' 
+#'
 #' @return Nothing.
 #'
 #' @family utilities
-#' 
+#'
 #' @export
 ensure_path <- function(x, recursive = FALSE) {
     x <- gsub("//", "/", x)

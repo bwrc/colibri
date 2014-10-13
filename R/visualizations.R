@@ -64,7 +64,7 @@ plot_block <- function(recording, blockid, signal, type = "seconds", interval = 
 
     if (type == "timestamp") {
         ts <- seq(from = min(tmp$t), to = max(tmp$t), by = 60)
-        tt <- as.POSIXct(tmp$t + str_to_timestamp(block$starttime))
+        tt <- tmp$t + recording$properties$time.start
         lb <-format.POSIXct(seq(min(tt), max(tt), by = "min"), format = "%H:%M")
         axis(1, at = ts, labels = lb)
         mtext(text = "time", side = 1, line = 3)
