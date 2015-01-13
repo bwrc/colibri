@@ -122,7 +122,7 @@ settings_template_hrv <- function() {
 
     ## Nonlinear
     settings$nonlinear$metric.list                    <- c("sampen", "apen")
-    settings$geometric$embedding.dimension            <- 2
+    settings$nonlinear$embedding.dimension            <- 2
 
     settings
 }

@@ -12,10 +12,11 @@ detect_artifacts_xu(x)
 A list with the values of the metrics.
 }
 \description{
-Implements method presented by Xu and Schuckers.
-Each RR interval is compared with the median of 25 surrounding RR
-intervals and the last accepted RR interval. Only if both differences are
-outside +- 20% the interval will be marked as an artifact.
+Implements a sligthly modified method presented by Xu and
+Schuckers.  Each RR interval is compared with the median of 24
+surrounding non-artefactual RR intervals and the last accepted RR
+interval. Only if both differences are outside +- 20% the interval
+will be marked as an artifact.
 }
 \references{
 Xu, X., Schuckers, S.: Automatic Detection of Artifacts in Heart

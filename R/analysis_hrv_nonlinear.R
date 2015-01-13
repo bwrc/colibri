@@ -34,8 +34,8 @@ analyse_nonlinear_helper <- function(metric, x, settings) {
 
     switch(metric,
 
-           sampen = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "approximate")),
-           apen   = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "sample"))
+           sampen = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "sample")),
+           apen   = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "approximate"))
 
            )
 }

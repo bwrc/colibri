@@ -129,8 +129,8 @@ analysis_pipeline_ibi <- function(settings, data) {
         res <- c(res, analyse_geometric(settings$geometric$metric.list, ibi, t.ibi, settings))
 
     ## Nonlinear analysis
-    if (settings$analysis$frequency)
-        res <- c(res, analyse_nonlinear(settings$nonlinaer$metric.list, ibi, t.ibi, settings))
+    if (settings$analysis$nonlinear)
+        res <- c(res, analyse_nonlinear(settings$nonlinear$metric.list, ibi, t.ibi, settings))
 
     ## Return results
     res

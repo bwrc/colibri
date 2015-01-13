@@ -7,17 +7,20 @@
 #'
 #' @param recording A recording structure.
 #' @param signal A signal name found in the recording. Optional, default is \code{ibi}.
-#' 
+#'
 #' @return The recording with the artifacts removed.
-#' 
+#'
 #' @family HRV
-#' 
+#'
 #' @export
 remove_ibi_artifacts <- function(recording, signal = "ibi") {
     ## Remove the artifacts
     ind.artifact                    <- detect_artifacts_xu(recording$signal[[signal]]$data)
-    recording$signal[[signal]]$data <- recording$signal[[signal]]$data[-ind.artifact]
-    recording$signal[[signal]]$t    <- recording$signal[[signal]]$t[-ind.artifact]
 
-   recording 
+    if (length(ind.artifact) > 0) {
+        recording$signal[[signal]]$data <- recording$signal[[signal]]$data[-ind.artifact]
+        recording$signal[[signal]]$t    <- recording$signal[[signal]]$t[-ind.artifact]
+    }
+
+    recording
 }

@@ -1,9 +1,10 @@
 #' Artifact detection from interbeat interval (IBI) time series.
 #'
-#' Implements method presented by Xu and Schuckers.
-#' Each RR interval is compared with the median of 25 surrounding RR
-#' intervals and the last accepted RR interval. Only if both differences are
-#' outside +- 20% the interval will be marked as an artifact.
+#' Implements a sligthly modified method presented by Xu and
+#' Schuckers.  Each RR interval is compared with the median of 24
+#' surrounding non-artefactual RR intervals and the last accepted RR
+#' interval. Only if both differences are outside +- 20% the interval
+#' will be marked as an artifact.
 #'
 #' @param x A vector with the interbeat intervals (IBIs)
 #' 
@@ -19,43 +20,31 @@ detect_artifacts_xu <- function(x) {
 
     N             <- length(x)
     last.accepted <- x[1]
-    ind           <- rep(NA, N)
+    art_ind       <- rep(NA, N)
+    ind_before    <- rep(NA, 12)
     thr           <- 0.2
 
     ## loop over the IBI series in windows
-    for(i in seq(N)) {
+    for(i in seq.int(N)) {
 
-        ## Adjust indices to prevent overshooting
-        ## the length of the sequence
-        if (i < 13) {
-            w.start <- 1
-        } else {
-            w.start <- i - 12
-        }
+        ## calculate current median
+        w_stop  <- min(N, i + 12)
+        cm      <- median(c(x[ind_before], x[i:(i + w_stop)]), na.rm = TRUE)
 
-        if ((i+13) > N) {
-            w.stop  <- N
-        } else {
-            w.stop  <- i + 12
-        }
-
-
-        ## The current median in the window
-        cm <- median(x[w.start : w.stop])
-
-        ## check if we ccept the current ibi or not
+        ## check if we accept the current ibi or not
         c1 <- abs(x[i] - last.accepted) > (thr * last.accepted)
         c2 <- abs(x[i] - cm) > (thr * cm)
 
         if (c1 & c2) {
-            ind[i] <- 1
+            art_ind[i] <- 1
         } else {
-            ind[i]        <- 0
-            last.accepted <- x[i]
+            art_ind[i]          <- 0
+            last.accepted       <- x[i]
+            ind_before[i %% 12] <- i
         }
     }
 
-    which(ind == 1)
+    which(art_ind == 1)
 }
 
 
