@@ -69,16 +69,19 @@ read.dbtable.sqlite <- function(filename, dbtable = NULL, casename = NULL, query
     ## Read the block data
     sqlite       <- dbDriver("SQLite")
     db           <- dbConnect(sqlite, filename)
+
     if (is.null(query.string))
         query.string <- paste("SELECT * FROM ", dbtable, " WHERE casename = '", casename, "'", sep = "")
+
     data         <- dbGetQuery(db, query.string)
 
     ## Disconnect database connection
     dbDisconnect(db)
 
     ## Convert any strings to factors
-    ind         <- sapply(data, is.character)
-    data[ind]   <- lapply(data[ind], factor)
+    ## ind         <- sapply(data, is.character)
+    ## data[ind]   <- lapply(data[ind], factor)
+    
     data
 }
 
