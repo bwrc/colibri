@@ -43,7 +43,7 @@ new_recording <- function() {
     ## Store block information
     recording$conf$blocks   <- NA
     recording$conf$events   <- NA
-    recording$conf$segments <- NA
+    ## recording$conf$segments <- NA
 
     recording
 

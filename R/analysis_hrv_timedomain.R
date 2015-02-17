@@ -30,16 +30,92 @@ analyse_timedomain <- function(metric.list, settings, ibi, t.ibi = NULL) {
 analyse_timedomain_helper <- function(metric, ibi, settings) {
 
     switch(metric,
+           min     = matrix(dimnames = list(metric, "value"), ibi_min(ibi)),
+           max     = matrix(dimnames = list(metric, "value"), ibi_max(ibi)),
+           median  = matrix(dimnames = list(metric, "value"), ibi_max(ibi)),
+
+           minhr     = matrix(dimnames = list(metric, "value"), ibi_min(ibi, type = "hr")),
+           maxhr     = matrix(dimnames = list(metric, "value"), ibi_max(ibi, type = "hr")),
+           medianhr  = matrix(dimnames = list(metric, "value"), ibi_max(ibi, type = "hr")),
+
            mean    = matrix(dimnames = list(metric, "value"), ibi_mean(ibi)),
            meanhr  = matrix(dimnames = list(metric, "value"), ibi_mean(ibi, type = "hr")),
+
            stdev   = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi)),
            stdevhr = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi, type = "hr")),
+
            rmssd   = matrix(dimnames = list(metric, "value"), ibi_rmssd(ibi)),
            var     = matrix(dimnames = list(metric, "value"), ibi_var(ibi)),
            nnx     = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "number"),
            pnnx    = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "percentage")
            )
 }
+
+#' Calculate the minimum of interbeat intervals or heart rate.
+#' The time series is in miliseconds
+#'
+#' @param ibi An array with interbeat intervals in milliseconds.
+#' @param type String denoting whether to use ibi (type = "ibi", default) or heart rate (type = "hr").
+#' 
+#' @return The minimum interbeat interval or heart rate.
+#'
+#' @family HRV time-domain
+#' 
+#' @keywords internal
+ibi_min <- function(ibi, type = "ibi") {
+    if (type == "ibi")
+        res <- min(ibi)
+    
+    if (type == "hr")
+        res <- min(6e4 / ibi)
+
+    res
+}
+
+
+#' Calculate the maximum of interbeat intervals or heart rate.
+#' The time series is in miliseconds
+#'
+#' @param ibi An array with interbeat intervals in milliseconds.
+#' @param type String denoting whether to use ibi (type = "ibi", default) or heart rate (type = "hr").
+#' 
+#' @return The maximum interbeat interval or heart rate.
+#'
+#' @family HRV time-domain
+#' 
+#' @keywords internal
+ibi_max <- function(ibi, type = "ibi") {
+    if (type == "ibi")
+        res <- max(ibi)
+    
+    if (type == "hr")
+        res <- max(6e4 / ibi)
+
+    res
+}
+
+
+#' Calculate the median of interbeat intervals or heart rate.
+#' The time series is in miliseconds
+#'
+#' @param ibi An array with interbeat intervals in milliseconds.
+#' @param type String denoting whether to calculate the median interbeat interval (type = "ibi", default) or the median heart rate (type = "hr").
+#' 
+#' @return The median interbeat interval or the median heart rate.
+#'
+#' @family HRV time-domain
+#' 
+#' @keywords internal
+ibi_median <- function(ibi, type = "ibi") {
+    if (type == "ibi")
+        res <- median(ibi)
+    
+    if (type == "hr")
+        res <- median(6e4 / ibi)
+
+    res
+}
+
 
 #' Calculate the average of interbeat intervals or heart rate.
 #' The time series is in miliseconds
