@@ -65,7 +65,7 @@
 #'@section Nonlinear settings:
 #' \describe{
 #'   \item{$nonlinear$metric.list}{A list of nonlinear metrics. Default is c("sampen", "apen") for both Sample Entropy and Approximate Entropy.}
-#'   \item{$geometric$embedding.dimension}{The embedding dimension. Default is 2.}
+#'   \item{$geometric$embedding_dimension}{The embedding dimension. Default is 2.}
 #' }
 #'
 #' @return A list with default analysis settings.
@@ -122,7 +122,7 @@ settings_template_hrv <- function() {
 
     ## Nonlinear
     settings$nonlinear$metric.list                    <- c("sampen", "apen")
-    settings$nonlinear$embedding.dimension            <- 2
+    settings$nonlinear$embedding_dimension            <- 2
 
     settings
 }

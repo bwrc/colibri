@@ -34,8 +34,8 @@ analyse_nonlinear_helper <- function(metric, x, settings) {
 
     switch(metric,
 
-           sampen = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "sample")),
-           apen   = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding.dimension = settings$nonlinear$embedding.dimension, type = "approximate"))
+           sampen = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding_dimension = settings$nonlinear$embedding_dimension, type = "sample")),
+           apen   = matrix(dimnames = list(metric, "value"), ibi_entropy(x, embedding_dimension = settings$nonlinear$embedding_dimension, type = "approximate"))
 
            )
 }
@@ -52,13 +52,17 @@ analyse_nonlinear_helper <- function(metric, x, settings) {
 #' @family HRV nonlinear
 #' 
 #' @export
-ibi_entropy <- function(x, embedding.dimension = 2, type = NULL) {
+ibi_entropy <- function(x, embedding_dimension = 2, type = NULL) {
+    res <- NULL
+
     if (is.null(type))
         stop("Entropy type not defined.")
 
     if (type == "approximate")
-        approx_entropy(x, edim = edim)
+        res <- approx_entropy(x, edim = embedding_dimension)
 
     if (type == "sample")
-        sample_entropy(x, edim = edim)
+        res <- sample_entropy(x, edim = embedding_dimension)
+
+    res
 }
