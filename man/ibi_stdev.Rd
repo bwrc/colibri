@@ -18,9 +18,11 @@ Calculate the standard deviation of interbeat intervals or heart rate.
 }
 \seealso{
 Other HRV time-domain: \code{\link{analyse_timedomain}};
-  \code{\link{ibi_mean}}; \code{\link{ibi_nnx}};
-  \code{\link{ibi_pnnx_helper}}; \code{\link{ibi_pnnx}};
-  \code{\link{ibi_rmssd}}; \code{\link{ibi_var}}
+  \code{\link{ibi_max}}; \code{\link{ibi_mean}};
+  \code{\link{ibi_median}}; \code{\link{ibi_min}};
+  \code{\link{ibi_nnx}}; \code{\link{ibi_pnnx_helper}};
+  \code{\link{ibi_pnnx}}; \code{\link{ibi_rmssd}};
+  \code{\link{ibi_var}}
 }
 \keyword{internal}
 

@@ -3,14 +3,14 @@
 \alias{ibi_entropy}
 \title{Calculate entropy of the IBI series}
 \usage{
-ibi_entropy(x, embedding.dimension = 2, type = NULL)
+ibi_entropy(x, embedding_dimension = 2, type = NULL)
 }
 \arguments{
 \item{x}{A vector with the interbeat intervals (IBIs).}
 
-\item{embedding.dimension}{The embedding dimension of the entropy. The default is 2.}
-
 \item{type}{The type of entropy as a string: \code{approximate} or \code{sample}}
+
+\item{embedding.dimension}{The embedding dimension of the entropy. The default is 2.}
 }
 \value{
 The entropy.

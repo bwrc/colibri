@@ -90,7 +90,7 @@ Return a list of lists, containing default analysis settings.
 
 \describe{
   \item{$nonlinear$metric.list}{A list of nonlinear metrics. Default is c("sampen", "apen") for both Sample Entropy and Approximate Entropy.}
-  \item{$geometric$embedding.dimension}{The embedding dimension. Default is 2.}
+  \item{$geometric$embedding_dimension}{The embedding dimension. Default is 2.}
 }
 }
 
