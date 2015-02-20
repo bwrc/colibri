@@ -32,6 +32,8 @@ Plot signal data and also show block limits and tasks types for each of the bloc
 \seealso{
 Other visualizations: \code{\link{plot_block}};
   \code{\link{plot_check_rr_detection}};
-  \code{\link{plot_ecg_r_peak}}; \code{\link{plot_metric}}
+  \code{\link{plot_ecg_r_peak}}; \code{\link{plot_metric}};
+  \code{\link{plot_spectrum}};
+  \code{\link{shade_frequency_band}}
 }
 

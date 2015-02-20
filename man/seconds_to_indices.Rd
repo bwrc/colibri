@@ -37,6 +37,7 @@ Other utilities: \code{\link{defactor}};
   \code{\link{replicate_df_row}};
   \code{\link{str_to_timestamp}};
   \code{\link{timeintervals_to_seconds}};
-  \code{\link{timestamp_to_seconds}}
+  \code{\link{timestamp_to_seconds}};
+  \code{\link{timestamp_to_str}}
 }
 

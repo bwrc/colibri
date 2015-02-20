@@ -16,6 +16,7 @@ Read data in the Firstbeat Data Format
 }
 \seealso{
 Other read_data: \code{\link{read.data.edf}};
+  \code{\link{read.data.ibi}};
   \code{\link{read.data.suunto}}; \code{\link{read.data}}
 }
 

@@ -6,6 +6,7 @@
 #' @param format The format of the data (optional). The supported data formats are:
 #'
 #' \describe{
+#' \item{ibi}{Generic IBI (one IBI per line, plaintext file, no header).}
 #' \item{sdf}{Suunto data format.}
 #' \item{fbe}{Firstbeat data format.}
 #' \item{edf}{European Data Format (using the EDF-package).}
@@ -29,6 +30,10 @@ read.data <- function(filename, format = NULL) {
 
         if (file.extension == "edf")
             format <- "european_data_format"
+
+        if (file.extension %in% c("ibi", "txt"))
+            format <- "generic_ibi"
+
     }
 
     ## Process various formats
@@ -41,6 +46,9 @@ read.data <- function(filename, format = NULL) {
     if (format == "european_data_format")
         recording <- read.data.edf(filename)
 
+    if (format == "generic_ibi")
+        recording <- read.data.ibi(filename)
+    
     recording
 
 }

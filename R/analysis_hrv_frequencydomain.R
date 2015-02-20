@@ -80,14 +80,18 @@ ibi_band_standard <- function(spec, settings) {
     lf  <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$band.lf)
     hf  <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$band.hf)
 
+    vlfr <- 100 * exp(log(vlf) - log(tot))
+    lfr  <- 100 * exp(log(lf) - log(tot))
+    hfr  <- 100 * exp(log(hf) - log(tot))
+    
     lf.norm <- 100 * exp(log(lf) - log(tot - vlf))
     hf.norm <- 100 * exp(log(hf) - log(tot - vlf))
     lfhf    <- exp(log(lf) - log(hf))
 
-    res           <- matrix(data = c(vlf, lf, hf, lf.norm, hf.norm, lfhf), byrow = TRUE, ncol = 1, nrow = 6)
+    res <- matrix(data = c(vlf, lf, hf, vlfr, lfr, hfr, lf.norm, hf.norm, lfhf), byrow = TRUE, ncol = 1, nrow = 9)
 
     ## Prefix the names if some string is given
-    res.names <- c("vlf", "lf", "hf", "lf.norm", "hf.norm", "lfhf")
+    res.names <- c("vlf", "lf", "hf", "vlf.p", "lf.p", "hf.p", "lf.norm", "hf.norm", "lfhf")
     if (settings$frequencydomain$parameters$band.names.standard.prefix != "")
         res.names <- paste(settings$frequencydomain$parameters$band.names.standard.prefix, res.names, sep = "")
 

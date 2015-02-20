@@ -43,6 +43,21 @@ str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
 }
 
 
+#' Convert a timestamp to a string
+#'
+#' @param ts A POSIXct timestamp.
+#' @param timeformat The timeformat used to format the timestamp as a string. Default is "\%Y\%m\%dT\%H\%M\%S".
+#'
+#' @return A string.
+#'
+#' @family utilities
+#'
+#' @export
+timestamp_to_str <- function(ts, timeformat = "%Y%m%dT%H%M%S") {
+    strftime(ts, format = timeformat)
+}
+
+
 #' Convert a factor to a string or numeric representation.
 #'
 #' @param x A factor
@@ -359,22 +374,29 @@ generate_segments <- function(time.start, time.stop, segment.length, segment.ove
     if (time.start < 0)
         time.stop <- time.stop - time.start - segment.length
 
-    ## Generate non-overlapping segments
-    seg.start <- seq(from = time.start, to = time.stop - segment.length, by = segment.length)
+    if (segment.length == 0) {
 
-    ## Generate overlapping segments
-    if (segment.overlap > 0) {
-        seg.start.overlap <- seq(from = time.start + segment.overlap, to = time.stop - segment.length, by = segment.length)
-        seg.start         <- sort(c(seg.start, seg.start.overlap))
+        segments      <- matrix(c(time.start, time.stop), nrow = 1, ncol = 2, byrow = TRUE)
+
+    } else {
+
+        ## Generate non-overlapping segments
+        seg.start <- seq(from = time.start, to = time.stop - segment.length, by = segment.length)
+
+        ## Generate overlapping segments
+        if (segment.overlap > 0) {
+            seg.start.overlap <- seq(from = time.start + segment.overlap, to = time.stop - segment.length, by = segment.length)
+            seg.start         <- sort(c(seg.start, seg.start.overlap))
+        }
+
+        segments     <- matrix(data = seg.start, nrow = length(seg.start), ncol = 2, byrow = FALSE)
+        segments[,2] <- segments[,2] + segment.length
+
+        ## Adjust the time limits of the last block
+        if (tolerance > 0)
+            segments[nrow(segments), 2] <- time.stop - tolerance
     }
-
-    segments     <- matrix(data = seg.start, nrow = length(seg.start), ncol = 2, byrow = FALSE)
-    segments[,2] <- segments[,2] + segment.length
-
-    ## Adjust the time limits of the last block
-    if (tolerance > 0)
-        segments[nrow(segments), 2] <- time.stop - tolerance
-
+    
     segments
 }
 

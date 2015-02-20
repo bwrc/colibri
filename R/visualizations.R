@@ -419,3 +419,69 @@ plot_metric <- function(recording, metric, filename, new.plot = TRUE, blockid = 
         dev.off()
 
 }
+
+
+#' Shade the area under the power spectrum corresponding to a frequency band.
+#'
+#' @param spec A spect
+#' @param band A two-element vector with the upper and lower
+#' frequencies of the frequency band to shade.
+#' @param col The colour to use for shading. Default is \code{red}.
+#'
+#' @return Nothing. Shades a frequency band.
+#' 
+#' @family visualizations
+#' 
+#' @keywords internal
+shade_frequency_band <- function(spec, band, col = "red") {
+
+    f1  <- band[1]
+    f2  <- band[2]
+
+    ind <- which((spec$f >= f1) & (spec$f <= f2))
+
+    sx  <- spec$f[ind]
+    sy  <- spec$Px[ind]
+
+    polygon(c(sx,rev(sx)), c(rep(0,length(sx)), rev(sy)), col = col)
+}
+
+
+#' Plot the HRV frequency spectrum.
+#'
+#' @param recording A recording structure. This structure must also contain the settings structure.
+#'
+#' @return Nothing. Produces a plot.
+#' 
+#' @family visualizations
+#' 
+#' @export
+plot_spectrum <- function(recording, signal = "ibi") {
+
+    settings <- recording$settings
+
+    t.sig <- recording$signal[[signal]]$t
+    sig  <-  recording$signal[[signal]]$data
+
+    ## Calculate the spectrum
+    fmin    <- settings$frequencydomain$parameters$f.limits[1]
+    fmax    <- settings$frequencydomain$parameters$f.limits[2]
+    f       <- seq(from = fmin, to = fmax, length.out = 1000)
+
+    spec    <- lombscargle(t.sig, sig, f,
+                           demean        = settings$frequencydomain$parameters$demean,
+                           normalization = settings$frequencydomain$parameters$normalization,
+                           smooth        =  settings$frequencydomain$parameters$smooth,
+                           smooth.kernel = settings$frequencydomain$parameters$kernel,
+                           smooth.degree = settings$frequencydomain$parameters$smooth.degree)
+
+    ## plot the spectrum
+    plot(spec$f, spec$Px, type = "l", col = "black", lwd = 2, ylim = c(0, 0.08))
+    
+    ## shade an area
+    shade_frequency_band(spec, settings$frequencydomain$parameters$band.vlf, col = "red")
+    shade_frequency_band(spec, settings$frequencydomain$parameters$band.lf, col = "blue")
+    shade_frequency_band(spec, settings$frequencydomain$parameters$band.hf, col = "green")
+    
+
+}

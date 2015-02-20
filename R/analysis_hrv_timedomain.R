@@ -46,6 +46,7 @@ analyse_timedomain_helper <- function(metric, ibi, settings) {
 
            rmssd   = matrix(dimnames = list(metric, "value"), ibi_rmssd(ibi)),
            var     = matrix(dimnames = list(metric, "value"), ibi_var(ibi)),
+
            nnx     = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "number"),
            pnnx    = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "percentage")
            )
@@ -203,8 +204,13 @@ ibi_stdev <- function(ibi, type = "ibi") {
 #' @keywords internal
 ibi_pnnx_helper <- function(ibi, pnnx.list, type = "percentage") {
 
+    if (type == "percentage")
+        rtype <- "pnnx"
+    if (type == "number")
+        rtype <- "nnx"
+
     res           <- matrix(data = NA, ncol = 1, nrow = length(pnnx.list))
-    rownames(res) <- paste("pnnx", pnnx.list, sep = "")
+    rownames(res) <- paste(rtype, pnnx.list, sep = "")
     colnames(res) <- "value"
 
     if (type == "percentage")
@@ -231,7 +237,7 @@ ibi_pnnx_helper <- function(ibi, pnnx.list, type = "percentage") {
 #' 
 #' @keywords internal
 ibi_nnx <- function(ibi, x = 50) {
-    sum(abs(diff(ibi)) >= x)
+    sum(abs(diff(ibi)) > x)
 }
 
 
@@ -246,5 +252,5 @@ ibi_nnx <- function(ibi, x = 50) {
 #' 
 #' @keywords internal
 ibi_pnnx <- function(ibi, x = 50) {
-    100 * ibi_nnx(ibi, x) / length(ibi)
+    100 * ibi_nnx(ibi, x) / (length(ibi) - 1)
 }

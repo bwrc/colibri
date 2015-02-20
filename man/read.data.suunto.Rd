@@ -17,6 +17,6 @@ Read data in the Suunto Data Format
 \seealso{
 Other read_data: \code{\link{read.data.edf}};
   \code{\link{read.data.firstbeat}};
-  \code{\link{read.data}}
+  \code{\link{read.data.ibi}}; \code{\link{read.data}}
 }
 

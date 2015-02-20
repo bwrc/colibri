@@ -11,6 +11,7 @@ read.data(filename, format = NULL)
 \item{format}{The format of the data (optional). The supported data formats are:
 
 \describe{
+\item{ibi}{Generic IBI (one IBI per line, plaintext file, no header).}
 \item{sdf}{Suunto data format.}
 \item{fbe}{Firstbeat data format.}
 \item{edf}{European Data Format (using the EDF-package).}
@@ -25,6 +26,7 @@ The input format is determined automatically from the file extension or from the
 \seealso{
 Other read_data: \code{\link{read.data.edf}};
   \code{\link{read.data.firstbeat}};
+  \code{\link{read.data.ibi}};
   \code{\link{read.data.suunto}}
 }
 

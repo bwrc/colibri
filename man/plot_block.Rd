@@ -34,6 +34,8 @@ Plot the signal data in a measurement block.
 \seealso{
 Other visualizations: \code{\link{plot_all_blocks}};
   \code{\link{plot_check_rr_detection}};
-  \code{\link{plot_ecg_r_peak}}; \code{\link{plot_metric}}
+  \code{\link{plot_ecg_r_peak}}; \code{\link{plot_metric}};
+  \code{\link{plot_spectrum}};
+  \code{\link{shade_frequency_band}}
 }
 
