@@ -21,12 +21,11 @@
 analyse_frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
 
     ## Calculate the spectrum
-    fmin    <- settings$frequencydomain$parameters$f.limits[1]
-    fmax    <- settings$frequencydomain$parameters$f.limits[2]
-    f       <- seq(from = fmin, to = fmax, length.out = 1000)
+    ## fmin    <- settings$frequencydomain$parameters$f.limits[1]
+    ## fmax    <- settings$frequencydomain$parameters$f.limits[2]
+    ## f       <- seq(from = fmin, to = fmax, length.out = 1000)
 
-    spec    <- lombscargle(t.ibi, ibi, f,
-                           demean        = settings$frequencydomain$parameters$demean,
+    spec    <- lombscargle(ibi, t.ibi,
                            normalization = settings$frequencydomain$parameters$normalization,
                            smooth        =  settings$frequencydomain$parameters$smooth,
                            smooth.kernel = settings$frequencydomain$parameters$kernel,
@@ -88,10 +87,10 @@ ibi_band_standard <- function(spec, settings) {
     hf.norm <- 100 * exp(log(hf) - log(tot - vlf))
     lfhf    <- exp(log(lf) - log(hf))
 
-    res <- matrix(data = c(vlf, lf, hf, vlfr, lfr, hfr, lf.norm, hf.norm, lfhf), byrow = TRUE, ncol = 1, nrow = 9)
+    res <- matrix(data = c(vlf, lf, hf, tot, vlfr, lfr, hfr, lf.norm, hf.norm, lfhf), byrow = TRUE, ncol = 1, nrow = 10)
 
     ## Prefix the names if some string is given
-    res.names <- c("vlf", "lf", "hf", "vlf.p", "lf.p", "hf.p", "lf.norm", "hf.norm", "lfhf")
+    res.names <- c("vlf", "lf", "hf", "tot", "vlf.p", "lf.p", "hf.p", "lf.nu", "hf.nu", "lfhf")
     if (settings$frequencydomain$parameters$band.names.standard.prefix != "")
         res.names <- paste(settings$frequencydomain$parameters$band.names.standard.prefix, res.names, sep = "")
 

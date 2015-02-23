@@ -464,19 +464,21 @@ plot_spectrum <- function(recording, signal = "ibi") {
     sig  <-  recording$signal[[signal]]$data
 
     ## Calculate the spectrum
-    fmin    <- settings$frequencydomain$parameters$f.limits[1]
-    fmax    <- settings$frequencydomain$parameters$f.limits[2]
-    f       <- seq(from = fmin, to = fmax, length.out = 1000)
+    ## fmin    <- settings$frequencydomain$parameters$f.limits[1]
+    ## fmax    <- settings$frequencydomain$parameters$f.limits[2]
+    ## f       <- seq(from = fmin, to = fmax, length.out = 1000)
 
-    spec    <- lombscargle(t.sig, sig, f,
-                           demean        = settings$frequencydomain$parameters$demean,
+    spec    <- lombscargle(sig, t.sig,
                            normalization = settings$frequencydomain$parameters$normalization,
                            smooth        =  settings$frequencydomain$parameters$smooth,
                            smooth.kernel = settings$frequencydomain$parameters$kernel,
                            smooth.degree = settings$frequencydomain$parameters$smooth.degree)
 
+
     ## plot the spectrum
-    plot(spec$f, spec$Px, type = "l", col = "black", lwd = 2, ylim = c(0, 0.08))
+    xmin <- settings$frequencydomain$parameters$f.limits[1]
+    xmax <- settings$frequencydomain$parameters$f.limits[2]
+    plot(spec$f, spec$Px, type = "l", col = "black", lwd = 2, xlim = c(xmin, xmax), xlab = "Frequency [Hz]", ylab = "PSD")
     
     ## shade an area
     shade_frequency_band(spec, settings$frequencydomain$parameters$band.vlf, col = "red")

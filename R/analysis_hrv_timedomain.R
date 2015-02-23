@@ -32,20 +32,19 @@ analyse_timedomain_helper <- function(metric, ibi, settings) {
     switch(metric,
            min     = matrix(dimnames = list(metric, "value"), ibi_min(ibi)),
            max     = matrix(dimnames = list(metric, "value"), ibi_max(ibi)),
-           median  = matrix(dimnames = list(metric, "value"), ibi_max(ibi)),
-
-           minhr     = matrix(dimnames = list(metric, "value"), ibi_min(ibi, type = "hr")),
-           maxhr     = matrix(dimnames = list(metric, "value"), ibi_max(ibi, type = "hr")),
-           medianhr  = matrix(dimnames = list(metric, "value"), ibi_max(ibi, type = "hr")),
-
            mean    = matrix(dimnames = list(metric, "value"), ibi_mean(ibi)),
-           meanhr  = matrix(dimnames = list(metric, "value"), ibi_mean(ibi, type = "hr")),
-
+           median  = matrix(dimnames = list(metric, "value"), ibi_median(ibi)),
            stdev   = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi)),
-           stdevhr = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi, type = "hr")),
+
+           
+           minhr    = matrix(dimnames = list(metric, "value"), ibi_min(ibi, type = "hr")),
+           maxhr    = matrix(dimnames = list(metric, "value"), ibi_max(ibi, type = "hr")),
+           meanhr   = matrix(dimnames = list(metric, "value"), ibi_mean(ibi, type = "hr")),
+           medianhr = matrix(dimnames = list(metric, "value"), ibi_median(ibi, type = "hr")),
+           stdevhr  = matrix(dimnames = list(metric, "value"), ibi_stdev(ibi, type = "hr")),
 
            rmssd   = matrix(dimnames = list(metric, "value"), ibi_rmssd(ibi)),
-           var     = matrix(dimnames = list(metric, "value"), ibi_var(ibi)),
+           ## var     = matrix(dimnames = list(metric, "value"), ibi_var(ibi)),
 
            nnx     = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "number"),
            pnnx    = ibi_pnnx_helper(ibi, settings$timedomain$parameters$pnnx, type = "percentage")

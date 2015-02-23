@@ -6,11 +6,16 @@
 #' @param t A vector with the time instants of the events.
 #' @param x A vector with 
 #' @param f A vector of frequencies at which the spectrum should be esimated.
-#' @param demean Should the mean be subtraced from the spectrum. Default is TRUE.
 #' @param smooth Should the spectrum be smoothed. Default is FALSE.
 #' @param smooth.kernel The smoothing kernel. The default is to use a 'daniell' kernel.
 #' @param smooth.degree The degree of smoothing. Default is 5.
-#' @param normalization How to normalize the spectrum. Possible values are 'variance' (default) and 'none'.
+#' @param normalization How to normalize the spectrum. Possible values
+#' are 'none' (default) and 'variance'. If 'none' the area of the
+#' power spectrum equals the variance of the signal. For 'variance',
+#' the area of the power spectrum is normalized by dividing by two
+#' times the variance of the signal.
+#' @param ofac Oversampling factor. Default is 4.
+#' @param hifac The spectrum is calculated for frequencies up to hifac * average sampling frequency. Default is 1.
 #'
 #' @return A list with the following components.
 #' \describe{
@@ -27,22 +32,20 @@
 #' @family HRV frequency-domain
 #'
 #' @export
-lombscargle <- function(t, x, f = NULL, demean = TRUE, smooth = FALSE, smooth.kernel = "daniell", smooth.degree = 5, normalization = "variance") {
-    ## When using this for HRV analyses,
-    ## t is the ibi series
-    ## and x is the time
+lombscargle <- function(x, t, f = NULL, smooth = FALSE, smooth.kernel = "daniell", smooth.degree = 5, normalization = "none", ofac = 4, hifac = 1) {
+    ## Sampling frequency and period
+    nt <- length(t)
+    nx <- length(x)
+    Fs <- (nt - 1) / (t[nt] - t[1])
 
+    ## Calculate frequency vector
     if (is.null(f)) {
-        maxfreq <- 1/min(diff(t))
-        f       <- seq(from = 1/512, to = maxfreq, by = 1/512)
+        n_out <- 0.5 * ofac * hifac * nx
+        f     <- Fs * seq.int(n_out) / (nx * ofac)
     }
 
-
     ## subtract mean, compute variance, initialize Px
-    if (demean)
-        z  <- x - mean(x)
-    else
-        z <- x
+    z  <- x - mean(x)
 
     xvar <- var(x)
     N    <- length(f)
@@ -63,12 +66,6 @@ lombscargle <- function(t, x, f = NULL, demean = TRUE, smooth = FALSE, smooth.ke
         }
     }
 
-    ## normalize by variance or some other method
-    if (normalization == "variance")
-        Pxnorm <- Px / 2 / xvar^2
-    if (normalization == "none")
-        Pxnorm <- Px
-
     for (i in seq(length(Px))) {
         if (xvar != 0) {
             Prob[i] <- 1 - (1 - exp(-Px[i]))^N
@@ -80,11 +77,20 @@ lombscargle <- function(t, x, f = NULL, demean = TRUE, smooth = FALSE, smooth.ke
             Prob[i] <- N * exp(-Px[i])
     }
 
+
+    
+    ## normalize by variance or some other method
+    if (normalization == "variance")
+        Pxnorm <- Px / 2 / xvar
+    if (normalization == "none")
+        Pxnorm <- Px / Fs
+
     ## Kernel smoothing
     if (smooth) {
         ks <- kernel(smooth.kernel, smooth.degree)
-        Px <- kernapply(c(rep(0, smooth.degree), Px, rep(0, smooth.degree)), ks, circular = FALSE)
+        Pxnorm <- kernapply(c(rep(0, smooth.degree), Pxnorm, rep(0, smooth.degree)), ks, circular = FALSE)
     }
 
     list("Px" = Pxnorm, "f" = f, "Prob" = Prob)
 }
+

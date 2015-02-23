@@ -87,7 +87,10 @@ settings_template_hrv <- function() {
     settings$segment.overlap            <- 0
     
     ## Time domain
-    settings$timedomain$metric.list     <- c("min", "max", "median", "mean", "meanhr", "rmssd", "var", "stdev", "stdevhr", "pnnx", "nnx")
+    settings$timedomain$metric.list     <- c("min", "max", "mean", "median", "stdev",
+                                             "minhr", "maxhr", "meanhr", "medianhr", "stdevhr", 
+                                             "rmssd", "pnnx", "nnx")
+
     settings$timedomain$parameters$pnnx <- c(10, 20, 30, 40, 50)
 
     ## Frequency domain
@@ -108,7 +111,6 @@ settings_template_hrv <- function() {
     settings$frequencydomain$parameters$f.limits <- c(0, 0.4)
 
     ## ... spectral smoothing
-    settings$frequencydomain$parameters$demean        <- TRUE
     settings$frequencydomain$parameters$normalization <- "none"
 
     settings$frequencydomain$parameters$smooth        <- FALSE

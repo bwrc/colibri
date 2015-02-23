@@ -3,18 +3,15 @@
 \alias{lombscargle}
 \title{Lomb-Scargle Periodogram estimation}
 \usage{
-lombscargle(t, x, f = NULL, demean = TRUE, smooth = FALSE,
-  smooth.kernel = "daniell", smooth.degree = 5,
-  normalization = "variance")
+lombscargle(x, t, f = NULL, smooth = FALSE, smooth.kernel = "daniell",
+  smooth.degree = 5, normalization = "none", ofac = 4, hifac = 1)
 }
 \arguments{
-\item{t}{A vector with the time instants of the events.}
-
 \item{x}{A vector with}
 
-\item{f}{A vector of frequencies at which the spectrum should be esimated.}
+\item{t}{A vector with the time instants of the events.}
 
-\item{demean}{Should the mean be subtraced from the spectrum. Default is TRUE.}
+\item{f}{A vector of frequencies at which the spectrum should be esimated.}
 
 \item{smooth}{Should the spectrum be smoothed. Default is FALSE.}
 
@@ -22,7 +19,15 @@ lombscargle(t, x, f = NULL, demean = TRUE, smooth = FALSE,
 
 \item{smooth.degree}{The degree of smoothing. Default is 5.}
 
-\item{normalization}{How to normalize the spectrum. Possible values are 'variance' (default) and 'none'.}
+\item{normalization}{How to normalize the spectrum. Possible values
+are 'none' (default) and 'variance'. If 'none' the area of the
+power spectrum equals the variance of the signal. For 'variance',
+the area of the power spectrum is normalized by dividing by two
+times the variance of the signal.}
+
+\item{ofac}{Oversampling factor. Default is 4.}
+
+\item{hifac}{The spectrum is calculated for frequencies up to hifac * average sampling frequency. Default is 1.}
 }
 \value{
 A list with the following components.
