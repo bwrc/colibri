@@ -472,14 +472,15 @@ integrate_power <- function(f, p, fmin, fmax) {
 #' @param recording A recording structure.
 #' @param signal A signal name found in the recording. Optional, default is "ECG".
 #' @param interpolate.qrs Should the position of the R-peak be interpolated. See \code{\link{qrs_interpolate}} for details.
+#' @param ... Additional arguments to \code{\link{qrs_detect}}.
 #'
 #' @return The recording structure with the new signals "ibi" and "ibi.amp" added.
 #'
 #' @family utilities
 #'
 #' @export
-ibi_from_ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE) {
-    r.peaks   <- qrs_detect(recording$signal[[signal]][["data"]], recording$signal[[signal]][["samplingrate"]], interpolate = interpolate.qrs)
+ibi_from_ecg <- function(recording, signal = "ECG", interpolate.qrs = TRUE, ...) {
+    r.peaks   <- qrs_detect(recording$signal[[signal]][["data"]], recording$signal[[signal]][["samplingrate"]], interpolate = interpolate.qrs, ...)
     ibi       <- diff(1000 * (r.peaks[,1] / recording$signal$ECG$samplingrate))
 
     ibi.t <- r.peaks[,1] / recording$signal$ECG$samplingrate

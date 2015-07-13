@@ -361,7 +361,8 @@ collect_results <- function(recording, format = "data.frame") {
         ## add metadata from the block information in the recording
         resultrow.template <- generate_result_row(recording$conf$blocks)
         new.columns        <- setdiff(names(resultrow.template), names(out))
-        out                <- merge(out, resultrow.template[,c(new.columns, "blockid")], by = "blockid")
+        out                <- merge(out, resultrow.template[, c(new.columns, "blockid")], by = "blockid")
+
     }
 
     out
@@ -403,13 +404,13 @@ collect_results_collection <- function(collection) {
 #' 
 #' @export
 add_segment_timestamp <- function(recording, results) {
-    for (i in levels(results$block)) {
-        ind <- (results$block == as.numeric(as.character(i)))
-        block.tmp <- subset(recording$conf$blocks, blockid == i)
+    for (i in unique(results$blockid)) {
+        ind                    <- (results$blockid == i)
+        block.tmp              <- subset(recording$conf$blocks, blockid == i)
         results$timestamp[ind] <- as.character(block.tmp$starttime)
     }
     results$timestamp <- str_to_timestamp(results$timestamp)
-    results$timestamp <- results$timestamp + results$segmentid * (recording$conf$settings$segment.length / 2)
+    results$timestamp <- results$timestamp+ (results$segmentid - 1) * (recording$conf$settings$segment.length) + (recording$conf$settings$segment.length / 2)
 
     results
 }

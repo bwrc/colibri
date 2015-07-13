@@ -320,14 +320,13 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
 
         ## add block start and stop if present in the window
         if (nrow(recording$conf$blocks) > 0) {
-
             ## block start
             b.ind <- which((blocks$starttime >= w.start) & (blocks$starttime <= w.stop))
             if (length(b.ind) > 0) {
                 for(b.tmp in b.ind) {
                     abline(v = blocks[b.tmp,]$starttime, col = "magenta", lwd = 2, lty = 1)
                     rect(blocks[b.tmp,]$starttime, -200, blocks[b.tmp,]$starttime+10, 200, col = rgb(1, 0, 1, alpha = 0.5), border = NA)
-                    text(x = blocks[b.tmp,]$starttime, y = 0, labels = paste("START: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 0, col = "white")
+                    text(x = blocks[b.tmp,]$starttime, y = 0, labels = paste("START: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 0, col = "magenta")
                 }
             }
             ## block stop
@@ -336,7 +335,7 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
                 for(b.tmp in b.ind) {
                     abline(v = blocks[b.tmp,]$stoptime, col = "magenta", lwd = 2, lty = 1)
                     rect(blocks[b.tmp,]$stoptime-10, -200, blocks[b.tmp,]$stoptime, 200,  col = rgb(1, 0, 1, alpha = 0.5), border = NA)
-                    text(x = blocks[b.tmp,]$stoptime, y = 0, labels = paste("STOP: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 1, col = "white")
+                    text(x = blocks[b.tmp,]$stoptime, y = 0, labels = paste("STOP: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 1, col = "magenta")
                 }
             }
 
@@ -458,7 +457,7 @@ shade_frequency_band <- function(spec, band, col = "red") {
 #' @export
 plot_spectrum <- function(recording, signal = "ibi") {
 
-    settings <- recording$settings
+    settings <- recording$conf$settings
 
     t.sig <- recording$signal[[signal]]$t
     sig  <-  recording$signal[[signal]]$data

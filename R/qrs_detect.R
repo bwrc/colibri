@@ -62,6 +62,7 @@ adjust_indices <- function(ind.start, ind.stop) {
 #' @param ecg A vector with the ECG signal
 #' @param samplingrate The sampling rate of the ECG signal
 #' @param interpolate Should the position of the R-peak be interpolated for improved accuracy. Default is TRUE.
+#' @param invert_polarity Should the polarity of the ECG signal be invertedy. Default is FALSE.
 #' 
 #' @return A matrix with two columns. The x-index of the R-peaks are in the first column and the
 #'         y-values of the ECG signal are in the second column
@@ -69,7 +70,10 @@ adjust_indices <- function(ind.start, ind.stop) {
 #' @family HRV
 #'
 #' @export
-qrs_detect <- function(ecg, samplingrate, interpolate = TRUE) {
+qrs_detect <- function(ecg, samplingrate, interpolate = TRUE, invert_polarity = FALSE) {
+    if (invert_polarity)
+        ecg <- -(ecg)
+    
     ecg.orig <- ecg
     
     debug <- FALSE

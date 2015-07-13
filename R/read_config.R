@@ -79,7 +79,7 @@ read.config.excel <- function(filename) {
     require("xlsx")
 
     ## Read the data
-    mc <- read.xlsx2(mc.filename, sheetName = "mc")
+    mc <- read.xlsx2(filename, sheetName = "mc")
 
     ## Change the type of some of the columns
     if ("dataid" %in% names(mc))
