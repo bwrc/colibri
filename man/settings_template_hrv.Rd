@@ -75,6 +75,8 @@ Return a list of lists, containing default analysis settings.
   \item{$frequencydomain$parameters$smooth}{Boolean indicating whether the spectrum should be smoothed. Default is FALSE.}
   \item{$frequencydomain$parameters$kernel}{String giving the smoothing kernel. Default is "daniell".}
   \item{$frequencydomain$parameters$smooth.degree}{Degree of smoothing. Default is 5.}
+  \item{$frequencydomain$parameters$ofac}{Lomb-Scargle oversampling factor.}
+  \item{$frequencydomain$parameters$hifac}{Lomb-Scargle hifac. Frequencies are estimated up until hifac * average sampling frequency.}
 }
 }
 

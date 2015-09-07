@@ -8,11 +8,11 @@ lombscargle(x, t, f = NULL, smooth = FALSE, smooth.kernel = "daniell",
   smooth.degree = 5, normalization = "none", ofac = 4, hifac = 1)
 }
 \arguments{
-\item{x}{A vector with}
+\item{x}{A vector with the events to be enalysed.}
 
 \item{t}{A vector with the time instants of the events.}
 
-\item{f}{A vector of frequencies at which the spectrum should be esimated.}
+\item{f}{A vector of frequencies at which the spectrum should be estimated.}
 
 \item{smooth}{Should the spectrum be smoothed. Default is FALSE.}
 

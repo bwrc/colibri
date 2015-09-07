@@ -2,10 +2,10 @@
 #'
 #' This code is adapted from the function lomb.m from
 #' http://www.mit.edu/~gari/CODE/HRV/CliffordHRVtools.zip.
-#' 
+#'
+#' @param x A vector with the events to be enalysed.
 #' @param t A vector with the time instants of the events.
-#' @param x A vector with 
-#' @param f A vector of frequencies at which the spectrum should be esimated.
+#' @param f A vector of frequencies at which the spectrum should be estimated.
 #' @param smooth Should the spectrum be smoothed. Default is FALSE.
 #' @param smooth.kernel The smoothing kernel. The default is to use a 'daniell' kernel.
 #' @param smooth.degree The degree of smoothing. Default is 5.
@@ -23,7 +23,7 @@
 #' \item{Px}{The power at the frequencies in f.}
 #' \item{Prob}{The probability of the power in a particular frequency band}
 #' }
-#' 
+#'
 #' @seealso
 #' http://www.ltrr.arizona.edu/~dmeko/notes_6.pdf
 #' https://onlinecourses.science.psu.edu/stat510/?q=book/export/html/57
@@ -78,7 +78,7 @@ lombscargle <- function(x, t, f = NULL, smooth = FALSE, smooth.kernel = "daniell
     }
 
 
-    
+
     ## normalize by variance or some other method
     if (normalization == "variance")
         Pxnorm <- Px / 2 / xvar
@@ -93,4 +93,3 @@ lombscargle <- function(x, t, f = NULL, smooth = FALSE, smooth.kernel = "daniell
 
     list("Px" = Pxnorm, "f" = f, "Prob" = Prob)
 }
-

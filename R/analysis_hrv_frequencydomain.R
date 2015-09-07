@@ -12,11 +12,11 @@
 #' \item{$frequencydomain$parameters$smooth.degree}{The degree of smoothing. Default is 5.}
 #' \item{$frequencydomain$parameters$normalization}{How to normalize the spectrum. Possible values are 'variance' (default) and 'none'.}
 #' }
-#' 
+#'
 #' @return A list with the values of the metrics.
-#' 
+#'
 #' @family HRV frequency-domain
-#' 
+#'
 #' @export
 analyse_frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
 
@@ -25,11 +25,21 @@ analyse_frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
     ## fmax    <- settings$frequencydomain$parameters$f.limits[2]
     ## f       <- seq(from = fmin, to = fmax, length.out = 1000)
 
+    ## Determine the max average frequency (= Nyquist frequency)
+    Fs <- (length(t.ibi) - 1) / (t.ibi[length(t.ibi)] - t.ibi[1])
+
+    ## Ensure that we have frequencies up until at least 0.4 Hz for the standard HRV frequency analyses
+    if ((settings$frequencydomain$parameters$hifac * (Fs / 2)) < 0.4) {
+        settings$frequencydomain$parameters$hifac <- ceil(0.4 / (Fs / 2))
+    }
+
     spec    <- lombscargle(ibi, t.ibi,
                            normalization = settings$frequencydomain$parameters$normalization,
-                           smooth        =  settings$frequencydomain$parameters$smooth,
+                           smooth        = settings$frequencydomain$parameters$smooth,
                            smooth.kernel = settings$frequencydomain$parameters$kernel,
-                           smooth.degree = settings$frequencydomain$parameters$smooth.degree)
+                           smooth.degree = settings$frequencydomain$parameters$smooth.degree,
+                           ofac          = settings$frequencydomain$parameters$ofac,
+                           hifac         = settings$frequencydomain$parameters$hifac)
 
     res  <- lapply(metric.list, analyse_frequencydomain_helper, spec, settings)
 }
@@ -40,11 +50,11 @@ analyse_frequencydomain <- function(metric.list, ibi, t.ibi, settings) {
 #' @param metric A frequency-domain metric to be estimated.
 #' @param spec The Lomb-Scargle spectrum estimated from the IBI series using the function lombscargle.
 #' @param settings The settings structure used for HRV analysis.
-#' 
+#'
 #' @return The value of the metric.
 #'
 #' @family HRV frequency-domain
-#' 
+#'
 #' @keywords internal
 analyse_frequencydomain_helper <- function(metric, spec, settings) {
 
@@ -65,14 +75,13 @@ analyse_frequencydomain_helper <- function(metric, spec, settings) {
 #' \item{$frequencydomain$parameters$band.lf)}{A two-element list with the upper and lower frequency bounds for the LF band.}
 #' \item{$frequencydomain$parameters$band.hf)}{A two-element list with the upper and lower frequency bounds for the HF band.}
 #' }
-#' 
+#'
 #' @return The input structure res with the following fields added:
 #'
 #' @family HRV frequency-domain
-#' 
+#'
 #' @export
 ibi_band_standard <- function(spec, settings) {
-
     tot <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$f.limits)
 
     vlf <- integrate_power(spec$f, spec$Px, settings$frequencydomain$parameters$band.vlf)
@@ -82,7 +91,7 @@ ibi_band_standard <- function(spec, settings) {
     vlfr <- 100 * exp(log(vlf) - log(tot))
     lfr  <- 100 * exp(log(lf) - log(tot))
     hfr  <- 100 * exp(log(hf) - log(tot))
-    
+
     lf.norm <- 100 * exp(log(lf) - log(tot - vlf))
     hf.norm <- 100 * exp(log(hf) - log(tot - vlf))
     lfhf    <- exp(log(lf) - log(hf))
@@ -109,18 +118,18 @@ ibi_band_standard <- function(spec, settings) {
 #' \item{$frequencydomain$parameters$band.upper}{A list with the upper frequency bound for the custom bands.}
 #' \item{$frequencydomain$parameters$band.names.custom}{A list with the names of the custom bands.}
 #' }
-#' 
+#'
 #' @return The frequencies in the custom bands.
 #'
 #' @family HRV frequency-domain
-#' 
+#'
 #' @export
 ibi_band_custom <- function(spec, settings) {
     N <- length(settings$frequencydomain$parameters$band.names.custom)
     res           <- matrix(data = NA, ncol = 1, nrow = N)
     rownames(res) <- settings$frequencydomain$parameters$band.names.custom
     colnames(res) <- "value"
-    
+
     for (i in seq(N)) {
         band   <- c(settings$frequencydomain$parameters$band.lower[i], settings$frequencydomain$parameters$band.upper[i])
         res[i] <- integrate_power(spec$f, spec$Px, band)

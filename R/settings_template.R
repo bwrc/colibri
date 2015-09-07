@@ -53,6 +53,8 @@
 #'   \item{$frequencydomain$parameters$smooth}{Boolean indicating whether the spectrum should be smoothed. Default is FALSE.}
 #'   \item{$frequencydomain$parameters$kernel}{String giving the smoothing kernel. Default is "daniell".}
 #'   \item{$frequencydomain$parameters$smooth.degree}{Degree of smoothing. Default is 5.}
+#'   \item{$frequencydomain$parameters$ofac}{Lomb-Scargle oversampling factor.}
+#'   \item{$frequencydomain$parameters$hifac}{Lomb-Scargle hifac. Frequencies are estimated up until hifac * average sampling frequency.}
 #' }
 #' 
 #'@section Geometric settings:
@@ -116,6 +118,8 @@ settings_template_hrv <- function() {
     settings$frequencydomain$parameters$smooth        <- FALSE
     settings$frequencydomain$parameters$kernel        <- "daniell"
     settings$frequencydomain$parameters$smooth.degree <- 5
+    settings$frequencydomain$parameters$ofac          <- 4
+    settings$frequencydomain$parameters$hifac         <- 1
 
     ## Geometric
     settings$geometric$metric.list                    <- c("sd1", "sd2", "triangular.index", "tinn")
