@@ -30,8 +30,8 @@ detect_artifacts_xu <- function(x) {
 
         ## calculate current median
         w_stop  <- min(N, i + 12)
-        
         cm      <- median(c(x[ind_before], x[i:w_stop]), na.rm = TRUE)
+
         ## check if we accept the current ibi or not
         c1 <- abs(x[i] - last.accepted) > (thr * last.accepted)
         c2 <- abs(x[i] - cm) > (thr * cm)
