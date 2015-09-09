@@ -24,13 +24,14 @@ detect_artifacts_xu <- function(x) {
     ind_before    <- rep(NA, 12)
     thr           <- 0.2
 
+    j <- 1
     ## loop over the IBI series in windows
     for(i in seq.int(N)) {
 
         ## calculate current median
         w_stop  <- min(N, i + 12)
-        cm      <- median(c(x[ind_before], x[i:(i + w_stop)]), na.rm = TRUE)
-
+        
+        cm      <- median(c(x[ind_before], x[i:w_stop]), na.rm = TRUE)
         ## check if we accept the current ibi or not
         c1 <- abs(x[i] - last.accepted) > (thr * last.accepted)
         c2 <- abs(x[i] - cm) > (thr * cm)
@@ -38,9 +39,11 @@ detect_artifacts_xu <- function(x) {
         if (c1 & c2) {
             art_ind[i] <- 1
         } else {
-            art_ind[i]          <- 0
-            last.accepted       <- x[i]
-            ind_before[i %% 12] <- i
+            art_ind[i]                  <- 0
+            last.accepted               <- x[i]
+            ind_before[max(1, j %% 13)] <- i
+            j <- j + 1
+
         }
     }
 
