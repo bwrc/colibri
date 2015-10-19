@@ -364,12 +364,15 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
         new.columns        <- setdiff(names(resultrow.template), names(out))
         out                <- merge(out, resultrow.template[, c(new.columns, "blockid")], by = "blockid")
 
+        ## add subject and casename from the recording
+        out$subject        <- recording$properties$subject
+        out$casename       <- recording$properties$casename
+        
         ## add segment timestamps
         if (add_segment_timestamp)
             out <- add_segment_timestamp(recording, out)
 
     }
-
     
     out
 }
