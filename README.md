@@ -1,4 +1,5 @@
 colibri
+=======
 
 `colibri` is a platform for automating analyses of physiological time series in [R](https://www.r-project.org/). Colibri is currently under development.
 
