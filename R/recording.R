@@ -324,14 +324,15 @@ cut_recordings_s <- function(collection, ts) {
 #' from a recording and return them as a data frame or as a matrix.
 #' 
 #' @param recording A recording.
-#' @param format. Output formmat. Either \code{data.frame} (default) or \code{matrix}.
+#' @param format Output format. Either \code{data.frame} (default) or \code{matrix}.
+#' @param add_segment_timestamp Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.
 #'
 #' @return The analysis results either as a data frame or as a matrix.
 #' 
 #' @family recording
 #' 
 #' @export
-collect_results <- function(recording, format = "data.frame") {
+collect_results <- function(recording, format = "data.frame", add_segment_timestamp = TRUE) {
     ## sanity check
     if ("results" %in% names(recording))
         if (length(recording$results) < 1)
@@ -363,8 +364,13 @@ collect_results <- function(recording, format = "data.frame") {
         new.columns        <- setdiff(names(resultrow.template), names(out))
         out                <- merge(out, resultrow.template[, c(new.columns, "blockid")], by = "blockid")
 
+        ## add segment timestamps
+        if (add_segment_timestamp)
+            out <- add_segment_timestamp(recording, out)
+
     }
 
+    
     out
 }
 
@@ -375,18 +381,19 @@ collect_results <- function(recording, format = "data.frame") {
 #' from a recording and return them as a data frame.
 #' 
 #' @param collection A recording collection
+#' @param add_segment_timestamp Should segment timestamps be added. Boolean. Default is \code{TRUE}.
 #'
 #' @return The analysis results as a data frame.
 #' 
 #' @family recording
 #' 
 #' @export
-collect_results_collection <- function(collection) {
+collect_results_collection <- function(collection, add_segment_timestamp = TRUE) {
     ## container for the results
     out <- data.frame()
 
     for (recording in collection) {
-        out <- rbind(out, collect_results(recording, format = "data.frame"))
+        out <- rbind(out, collect_results(recording, format = "data.frame", add_segment_timestamp = add_segment_timestamp))
     }
 
     out
