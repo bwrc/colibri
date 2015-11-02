@@ -33,7 +33,7 @@ plot_block <- function(recording, blockid, signal, type = "seconds", interval = 
     }
 
     if (new.plot)
-        x11()
+        plot.new()
 
     blockid.tmp <- blockid
     block       <- subset(recording$conf$blocks, blockid == blockid.tmp)
@@ -109,7 +109,7 @@ plot_all_blocks <- function(recording, signal, type = "seconds", interval = 15, 
     }
 
     if (new.plot)
-        x11()
+        plot.new()
     
     ## Plot the signal
     y <- recording$signal[[signal]][["data"]]
@@ -203,7 +203,7 @@ plot_check_rr_detection <- function(recording, blockid, ecg.signal.name = "ECG",
     }
 
     if (new.plot)
-        x11()
+        plot.new()
 
     blockid.tmp <- blockid
     block       <- subset(recording$conf$blocks, blockid == blockid.tmp)
@@ -385,7 +385,7 @@ plot_metric <- function(recording, metric, filename, new.plot = TRUE, blockid = 
     }
 
     if (new.plot)
-        x11()
+        plot.new()
 
     ## Get the data
     if (is.null(blockid)) {
