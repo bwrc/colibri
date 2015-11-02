@@ -157,12 +157,12 @@ block_to_seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%
         block.s$stoptime <- zerotime.s + defactor(block$stoptime, type = "numeric")
 
     if (block$starttype == "timestamp") {
-        ts                <- str_to_timestamp(block$starttime, timeformat = timeformat)
+        ts                <- str_to_timestamp(defactor(block$starttime, type = "string"), timeformat = timeformat)
         block.s$starttime <- as.numeric(difftime(ts, time.start, units = "secs"))
     }
 
     if (block$starttype == "timestamp") {
-        ts                <- str_to_timestamp(block$stoptime, timeformat = timeformat)
+        ts                <- str_to_timestamp(defactor(block$stoptime, type = "string"), timeformat = timeformat)
         block.s$stoptime  <- as.numeric(difftime(ts, time.start, units = "secs"))
     }
 

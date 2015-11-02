@@ -4,7 +4,7 @@
 #' @return An empty recording structure.
 #'
 #' @family recording
-#' 
+#'
 #' @export
 new_recording <- function() {
     ## Create containers
@@ -57,9 +57,9 @@ new_recording <- function() {
 #' @param ibi.t An optional array with the times of occurrence of the interbeat intervals.
 #'
 #' @return The recording structure with the interbeat intervals added.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 recording_set_ibi <- function(recording, ibi, ibi.t = NULL) {
     ## Set the ibi
@@ -93,9 +93,9 @@ recording_set_ibi <- function(recording, ibi, ibi.t = NULL) {
 #' @param casename The casename. Optional. If not provided it is determined from the field \code{recording$properties$casename}.
 #'
 #' @return The recording structure with the block information added.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 recording_set_blocks <- function(recording, filename = NULL, casename = NULL) {
     if (is.null(filename))
@@ -113,11 +113,11 @@ recording_set_blocks <- function(recording, filename = NULL, casename = NULL) {
 #'
 #' @param filename The database filename. Optional. If not provided it is determined from the field \code{recording$properties$db.filename}.
 #' @param casename The casename. Optional. If not provided it is determined from the field \code{recording$properties$casename}.
-#' 
+#'
 #' @return The recording structure with the event information added.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 recording_set_events <- function(recording, filename = NULL, casename = NULL) {
     if (is.null(filename))
@@ -139,9 +139,9 @@ recording_set_events <- function(recording, filename = NULL, casename = NULL) {
 #' @param timestamp The timestamp in ISO-8601 format: YYYYMMDDTHHMMSS. If the timestamp is not given, it is read from the recording.
 #'
 #' @return The recording structure with the zerotime added.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 recording_set_zerotime <- function(recording, timestamp = NULL) {
 
@@ -150,7 +150,7 @@ recording_set_zerotime <- function(recording, timestamp = NULL) {
 
     recording$properties$zerotime   <- timestamp
     recording$properties$zerotime.s <- as.numeric(difftime(timestamp, recording$properties$time.start, units = "secs"))
-    
+
     recording
 }
 
@@ -160,9 +160,9 @@ recording_set_zerotime <- function(recording, timestamp = NULL) {
 #' @param A recording.
 #'
 #' @return The zerotime as a timestamp (\code{POSIXct}).
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 recording_get_zerotime <- function(recording) {
     if(is.null(recording$conf$events))
@@ -178,10 +178,10 @@ recording_get_zerotime <- function(recording) {
 #'
 #' @param collection A recording collection (a list of recordings).
 #'
-#' @return A list containing the start and stop times fo 
-#' 
+#' @return A list containing the start and stop times fo
+#'
 #' @family recording
-#' 
+#'
 #' @export
 find_recording_overlap <- function(collection) {
     N <- length(collection)
@@ -212,9 +212,9 @@ find_recording_overlap <- function(collection) {
 #' @param ts A time interval given as a two-element list with two timestamps. The timestamps are given as strings in ISO-8601 format or as \code{POSIXct} timestamps.
 #'
 #' @return The recording, with all signals cut to the given time interval.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 cut_recording <- function(recording, ts = NULL) {
     signals   <- names(recording$signal)
@@ -245,9 +245,9 @@ cut_recording <- function(recording, ts = NULL) {
 #' @param ts A time interval given as a two-element list where the elements correspond to the number of seconds from the zerotime of the recording.
 #'
 #' @return The recording, with all signals cut to the given time interval.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 cut_recording_s<- function(recording, ts = NULL) {
     signals   <- names(recording$signal)
@@ -278,9 +278,9 @@ cut_recording_s<- function(recording, ts = NULL) {
 #' @param ts A time interval given as a two-element list with two timestamps. The timestamps are given as strings in ISO-8601 format or as \code{POSIXct} timestamps.
 #'
 #' @return The recording collection, with all signals in all recordings cut to the given time interval.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 cut_recordings <- function(collection, ts) {
     N <- length(collection)
@@ -300,12 +300,12 @@ cut_recordings <- function(collection, ts) {
 #' all recordings in the collection are processed.
 #'
 #' @param collection A recording collection.
-#' @param ts A time interval given as a two-element list where the elements correspond to the number of seconds from the zerotime of the recording. 
+#' @param ts A time interval given as a two-element list where the elements correspond to the number of seconds from the zerotime of the recording.
 #'
 #' @return The recording collection, with all signals in all recordings cut to the given time interval.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 cut_recordings_s <- function(collection, ts) {
     N <- length(collection)
@@ -319,18 +319,18 @@ cut_recordings_s <- function(collection, ts) {
 
 
 #' Collect results.
-#' 
+#'
 #' Get the analysis results, which are internally stored as a list of matrices,
 #' from a recording and return them as a data frame or as a matrix.
-#' 
+#'
 #' @param recording A recording.
 #' @param format Output format. Either \code{data.frame} (default) or \code{matrix}.
 #' @param add_segment_timestamp Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.
 #'
 #' @return The analysis results either as a data frame or as a matrix.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 collect_results <- function(recording, format = "data.frame", add_segment_timestamp = TRUE) {
     ## sanity check
@@ -367,29 +367,29 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
         ## add subject and casename from the recording
         out$subject        <- recording$properties$subject
         out$casename       <- recording$properties$casename
-        
+
         ## add segment timestamps
         if (add_segment_timestamp)
             out <- add_segment_timestamp(recording, out)
 
     }
-    
+
     out
 }
 
 
 #' Collect the results from all recordings in a recording collection.
-#' 
+#'
 #' Get the analysis results, which are internally stored as a list of matrices,
 #' from a recording and return them as a data frame.
-#' 
+#'
 #' @param collection A recording collection
 #' @param add_segment_timestamp Should segment timestamps be added. Boolean. Default is \code{TRUE}.
 #'
 #' @return The analysis results as a data frame.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 collect_results_collection <- function(collection, add_segment_timestamp = TRUE) {
     ## container for the results
@@ -404,23 +404,26 @@ collect_results_collection <- function(collection, add_segment_timestamp = TRUE)
 
 
 #' Add timestamps to the segments in the results collected from a recording
-#' 
+#'
 #' @param recording A recording.
 #' @param results The results collected from a recording as a data frame.
 #'
 #' @return The results with the segment timestamps added.
-#' 
+#'
 #' @family recording
-#' 
+#'
 #' @export
 add_segment_timestamp <- function(recording, results) {
+    ## Initialise empty timestamp field in the results structure
+    results$timestamp      <- as.POSIXct(rep(NA, nrow(results)))
+
     for (i in unique(results$blockid)) {
         ind                    <- (results$blockid == i)
 
         block.tmp              <- subset(recording$conf$blocks, blockid == i)
         block.s                <- block_to_seconds(recording, block = block.tmp)
         data.segments          <- generate_segments_from_block(block.s, recording$conf$settings)
-        
+
         ## Add the start time of the block to each instance of it
         results$timestamp[ind] <- str_to_timestamp(as.character(block.tmp$starttime))
 
@@ -433,12 +436,12 @@ add_segment_timestamp <- function(recording, results) {
 
 
 #' Save a recording
-#' 
+#'
 #' @param recording A recording.
 #' @param filename The filename in which to save the recording.
 #'
 #' @family recording
-#' 
+#'
 #' @export
 save_recording <- function(recording, filename) {
     saveRDS(recording, file = filename, compress = "xz")
@@ -446,11 +449,11 @@ save_recording <- function(recording, filename) {
 
 
 #' Load a recording
-#' 
+#'
 #' @param filename The filename from which to load the recording.
 #'
 #' @family recording
-#' 
+#'
 #' @export
 load_recording <- function(filename) {
     readRDS(filename)
