@@ -219,11 +219,16 @@ extract_segment <- function(recording, ind1, ind2 = NULL, signal = NULL) {
     }
 
     out           <- recording$signal[[signal]]
-    out[["data"]] <- recording$signal[[signal]]$data[ind1:ind2]
-    out[["t"]]    <- recording$signal[[signal]]$t[ind1:ind2]
+
+    if (all(is.na(out))) {
+        out[["data"]] <- c()
+        out[["t"]]    <-c()
+    } else {
+        out[["data"]] <- recording$signal[[signal]]$data[ind1:ind2]
+        out[["t"]]    <- recording$signal[[signal]]$t[ind1:ind2]
+    }
 
     out
-
 }
 
 
@@ -395,7 +400,7 @@ generate_segments <- function(time.start, time.stop, segment.length, segment.ove
         if (tolerance > 0)
             segments[nrow(segments), 2] <- time.stop - tolerance
     }
-    
+
     segments
 }
 
