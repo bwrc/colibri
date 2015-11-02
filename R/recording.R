@@ -418,17 +418,19 @@ add_segment_timestamp <- function(recording, results) {
     results$timestamp      <- as.POSIXct(rep(NA, nrow(results)))
 
     for (i in unique(results$blockid)) {
-        ind                    <- (results$blockid == i)
+            block.tmp              <- subset(recording$conf$blocks, blockid == i)
+            block.s                <- block_to_seconds(recording, block = block.tmp)
+            data.segments          <- generate_segments_from_block(block.s, recording$conf$settings)
 
-        block.tmp              <- subset(recording$conf$blocks, blockid == i)
-        block.s                <- block_to_seconds(recording, block = block.tmp)
-        data.segments          <- generate_segments_from_block(block.s, recording$conf$settings)
+        for (v in levels(results$variable)) {
+            ind                    <- which((results$blockid == i) & (results$variable == v))
 
-        ## Add the start time of the block to each instance of it
-        results$timestamp[ind] <- str_to_timestamp(as.character(block.tmp$starttime))
+            ## Add the start time of the block to each instance of it
+            results$timestamp[ind] <- str_to_timestamp(as.character(block.tmp$starttime))
 
-        ## Add the offset of each segment and half of the segment length to get the correct midpoint
-        results$timestamp[ind] <- results$timestamp[ind] + data.segments[,1] + (recording$conf$settings$segment.length / 2)
+            ## Add the offset of each segment and half of the segment length to get the correct midpoint
+            results$timestamp[ind] <- results$timestamp[ind] + data.segments[,1] + (recording$conf$settings$segment.length / 2)
+        }
     }
 
     results
