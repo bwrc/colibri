@@ -385,7 +385,7 @@ generate_segments <- function(time.start, time.stop, segment.length, segment.ove
 
         ## Generate overlapping segments
         if (segment.overlap > 0) {
-            seg.start.overlap <- seq(from = time.start + segment.overlap, to = time.stop - segment.length, by = segment.length)
+            seg.start.overlap <- seq(from = time.start + (segment.length - segment.overlap), to = time.stop - segment.length, by = segment.length)
             seg.start         <- sort(c(seg.start, seg.start.overlap))
         }
 
