@@ -35,6 +35,7 @@ Other utilities: \code{\link{defactor}};
   \code{\link{get_filename_parts}};
   \code{\link{hr_from_ibi}}; \code{\link{ibi_from_ecg}};
   \code{\link{integrate_power}};
+  \code{\link{num_to_timestamp}};
   \code{\link{replicate_df_row}};
   \code{\link{str_to_timestamp}};
   \code{\link{timeintervals_to_seconds}};

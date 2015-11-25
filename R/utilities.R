@@ -39,7 +39,23 @@ get_file_extension <- function(filename) {
 str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
     if (is.null(timeformat))
         stop("Missing time format.")
-    as.POSIXct(strptime(as.character(s), timeformat))
+    as.POSIXct(strptime(as.character(s), timeformat), tz="UTC")
+}
+
+
+#' Convert a numeric value to a timestamp
+#' Assumes the numeric values come from a call to as.numeric() on a POSIXct with 
+#' time zone tz="UTC"!
+#'
+#' @param tn A numeric vector representing time in seconds since the epoch ‘1970-01-01 00:00.00 UTC’
+#'
+#' @return A vector of timestamps of class POSIXct
+#'
+#' @family utilities
+#'
+#' @export
+num_to_timestamp <- function(tn) {
+  as.POSIXct(tn, origin = as.POSIXct("1970-01-01", tz = "UTC"), tz = "UTC")
 }
 
 
@@ -54,7 +70,7 @@ str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
 #'
 #' @export
 timestamp_to_str <- function(ts, timeformat = "%Y%m%dT%H%M%S") {
-    strftime(ts, format = timeformat)
+    strftime(ts, format = timeformat, tz="UTC")
 }
 
 

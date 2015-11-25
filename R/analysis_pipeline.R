@@ -77,10 +77,12 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
         res.seg       <- analysis.pipeline.function(settings, res)
         res.seg       <- do.call(rbind, res.seg)
 
-        tmp           <- matrix(ncol = 2, nrow = nrow(res.seg))
-        colnames(tmp) <- c("block", "segment")
+        tmp           <- matrix(ncol = 3, nrow = nrow(res.seg))
+        colnames(tmp) <- c("block", "segment", "timestamp")
         tmp[, 1]       <- block$blockid
         tmp[, 2]       <- i
+        tmp[, 3]       <- as.numeric( recording$properties$zerotime + data.segments[i,1] +
+                                     (recording$conf$settings$segment.length / 2) )
 
         res.seg       <- cbind(res.seg, tmp)
 

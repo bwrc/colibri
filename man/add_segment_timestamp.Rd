@@ -2,7 +2,7 @@
 % Please edit documentation in R/recording.R
 \name{add_segment_timestamp}
 \alias{add_segment_timestamp}
-\title{Add timestamps to the segments in the results collected from a recording.
+\title{[deprecated] Add timestamps to the segments in the results collected from a recording.
 Timestamp value gives the position of the _midpoint_ of the respective segment.}
 \usage{
 add_segment_timestamp(recording, results)
@@ -16,7 +16,7 @@ add_segment_timestamp(recording, results)
 The results with the segment timestamps added.
 }
 \description{
-Add timestamps to the segments in the results collected from a recording.
+[deprecated] Add timestamps to the segments in the results collected from a recording.
 Timestamp value gives the position of the _midpoint_ of the respective segment.
 }
 \seealso{

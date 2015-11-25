@@ -358,6 +358,13 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
         out$blockid    <- as.numeric(data[,"block"])
         out$block      <- factor(as.numeric(data[,"block"]))
         out$segment    <- factor(as.numeric(data[,"segment"]))
+        
+        if (add_segment_timestamp){
+          out$timestamp  <- num_to_timestamp(out$timestamp)
+        } else {
+          out$timestamp  <- NULL
+        }
+            
 
         ## add metadata from the block information in the recording
         resultrow.template <- generate_result_row(recording$conf$blocks)
@@ -367,11 +374,6 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
         ## add subject and casename from the recording
         out$subject        <- recording$properties$subject
         out$casename       <- recording$properties$casename
-
-        ## add segment timestamps
-        if (add_segment_timestamp)
-            out <- add_segment_timestamp(recording, out)
-
     }
 
     out
@@ -403,7 +405,7 @@ collect_results_collection <- function(collection, add_segment_timestamp = TRUE)
 }
 
 
-#' Add timestamps to the segments in the results collected from a recording.
+#' [deprecated] Add timestamps to the segments in the results collected from a recording.
 #' Timestamp value gives the position of the _midpoint_ of the respective segment.
 #'
 #' @param recording A recording.
@@ -415,30 +417,29 @@ collect_results_collection <- function(collection, add_segment_timestamp = TRUE)
 #'
 #' @export
 add_segment_timestamp <- function(recording, results) {
-    ## Initialise empty timestamp field in the results structure
-    results$timestamp      <- as.POSIXct(rep(NA, nrow(results)))
-
-    for (i in unique(results$blockid)) {
-        block.tmp              <- subset(recording$conf$blocks, blockid == i)
-        block.s                <- block_to_seconds(recording, block = block.tmp)
-        #block.s expresses time in seconds relative to recording$properties$zerotime
-        data.segments          <- generate_segments_from_block(block.s, recording$conf$settings)
-        #data.segments are expressed in seconds relative to recording$properties$zerotime
-        
-        for (v in levels(results$variable)) {
-            ind <- which((results$blockid == i) & (results$variable == v))
-            ind <- ind[order(results$segment[ind])] #into ascending order
+    warning("Usage of add_segment_timestamp() is discouraged. collect_results() adds them by default.\n")
+    
+    if (! "timestamp" %in% names(results)){
+        ## Initialise empty timestamp field in the results structure
+        results$timestamp      <- as.POSIXct(rep(NA, nrow(results)))
+    
+        for (i in unique(results$blockid)) {
+            block.tmp              <- subset(recording$conf$blocks, blockid == i)
+            block.s                <- block_to_seconds(recording, block = block.tmp)
+            #block.s expresses time in seconds relative to recording$properties$zerotime
+            data.segments          <- generate_segments_from_block(block.s, recording$conf$settings)
+            #data.segments are expressed in seconds relative to recording$properties$zerotime
             
-            ## Add the offset of each segment and half of the segment length to get the correct midpoint
-            results$timestamp[ind] <- recording$properties$zerotime + data.segments[,1] + (recording$conf$settings$segment.length / 2)
-            
-            ## Add the start time of the block to each instance of it
-            #results$timestamp[ind] <- str_to_timestamp(as.character(block.tmp$starttime))
-            
-            ## Add the offset of each segment and half of the segment length to get the correct midpoint
-            #results$timestamp[ind] <- results$timestamp[ind] + data.segments[,1] + (recording$conf$settings$segment.length / 2)
-            
+            for (v in levels(results$variable)) {
+                ind <- which((results$blockid == i) & (results$variable == v))
+                ind <- ind[order(results$segment[ind])] #into ascending order
+                
+                ## Add the offset of each segment and half of the segment length to get the correct midpoint
+                results$timestamp[ind] <- recording$properties$zerotime + data.segments[,1] + (recording$conf$settings$segment.length / 2)
+            }
         }
+    } else {
+        cat("Field ''timestamp'' already present, nothing done.\n")
     }
 
     results
