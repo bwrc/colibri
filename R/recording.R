@@ -358,11 +358,15 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
         out$blockid    <- as.numeric(data[,"block"])
         out$block      <- factor(as.numeric(data[,"block"]))
         out$segment    <- factor(as.numeric(data[,"segment"]))
-        
+
         if (add_segment_timestamp){
-          out$timestamp  <- num_to_timestamp(out$timestamp)
+            if ("timestamp" %in% names(out)) {
+                out$timestamp  <- num_to_timestamp(out$timestamp)  
+            } else {
+                cat("Field ''timestamp'' not present in data. Use add_segment_timestamp() to add timestamps or recompute results using the current version of Colibri.")
+            }
         } else {
-          out$timestamp  <- NULL
+            if ("timestamp" %in% names(out)) out$timestamp  <- NULL #remove field
         }
             
 
