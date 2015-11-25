@@ -4,12 +4,15 @@
 \alias{collect_results}
 \title{Collect results.}
 \usage{
-collect_results(recording, format = "data.frame")
+collect_results(recording, format = "data.frame",
+  add_segment_timestamp = TRUE)
 }
 \arguments{
 \item{recording}{A recording.}
 
-\item{format.}{Output formmat. Either \code{data.frame} (default) or \code{matrix}.}
+\item{format}{Output format. Either \code{data.frame} (default) or \code{matrix}.}
+
+\item{add_segment_timestamp}{Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.}
 }
 \value{
 The analysis results either as a data frame or as a matrix.

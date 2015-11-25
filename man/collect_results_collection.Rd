@@ -4,10 +4,12 @@
 \alias{collect_results_collection}
 \title{Collect the results from all recordings in a recording collection.}
 \usage{
-collect_results_collection(collection)
+collect_results_collection(collection, add_segment_timestamp = TRUE)
 }
 \arguments{
 \item{collection}{A recording collection}
+
+\item{add_segment_timestamp}{Should segment timestamps be added. Boolean. Default is \code{TRUE}.}
 }
 \value{
 The analysis results as a data frame.
