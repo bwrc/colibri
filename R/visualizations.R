@@ -275,7 +275,8 @@ plot_check_rr_detection <- function(recording, blockid, ecg.signal.name = "ECG",
 #' 
 #' @export
 plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.color = "blue",
-                            signal2 = NULL, signal2.color = "red", signal2.pch = 10, signal2.cex = 2) {
+                            signal2 = NULL, signal2.color = "red", signal2.pch = 10, signal2.cex = 2,
+                            x.axis.type = "numeric") {
 
     require(gplots)
 
@@ -310,8 +311,30 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
 
         ## ecg signal
         signal.type <- "l"
-        plot(recording$signal[[signal]]$t[i.start:(i.start + ns - 1)], recording$signal[[signal]]$data[i.start:(i.start + ns - 1)], type = signal.type, col = signal.color)
-
+        
+        if (x.axis.type == "numeric"){
+            # x -axis in seconds
+            plot(recording$signal[[signal]]$t[i.start:(i.start + ns - 1)],
+                 recording$signal[[signal]]$data[i.start:(i.start + ns - 1)],
+                 type = signal.type,
+                 col = signal.color)
+          
+        } else if (x.axis.type == "timestamp") {
+          # x -axis in hh:mm:ss units
+          tmpTimeVec <- recording$properties$time.start + recording$signal[[signal]]$t[i.start:(i.start + ns - 1)]
+          plot(tmpTimeVec,
+               recording$signal[[signal]]$data[i.start:(i.start + ns - 1)],
+               type = signal.type,
+               col = signal.color,
+               xaxt = "n")
+          r <- as.POSIXct(round(range(tmpTimeVec, na.rm=T), "secs"))
+          if (diff(r) > 20 ){
+              axis.POSIXct(1, at = seq(r[1], r[2], by = 5), format = "%H:%M:%S")  
+          } else {
+              axis.POSIXct(1, at = seq(r[1], r[2], by = 'sec'), format = "%H:%M:%S")
+          }
+        } else {stop(sprintf('Unrecognized option "%s" for x.axis.type. Use one of the following: {"numeric", "timestamp"}.', x.axis.type))}
+        
         ## add r-peaks
         if (! is.null(signal2)) {
             ind <- which((recording$signal[[signal2]]$t >= w.start) & (recording$signal[[signal2]]$t <= w.stop))
