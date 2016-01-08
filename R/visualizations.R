@@ -319,6 +319,35 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
                  type = signal.type,
                  col = signal.color)
           
+            if (! is.null(signal2)) {
+              ind <- which((recording$signal[[signal2]]$t >= w.start) & (recording$signal[[signal2]]$t <= w.stop))
+              points(recording$signal[[signal2]]$t[ind], recording$signal[[signal2]]$data[ind], col = signal2.color, pch = signal2.pch, cex = signal2.cex)
+            }
+          
+          ## add block start and stop if present in the window
+          if (nrow(recording$conf$blocks) > 0) {
+            ## block start
+            b.ind <- which((blocks$starttime >= w.start) & (blocks$starttime <= w.stop))
+            if (length(b.ind) > 0) {
+              for(b.tmp in b.ind) {
+                abline(v = blocks[b.tmp,]$starttime, col = "magenta", lwd = 2, lty = 1)
+                rect(blocks[b.tmp,]$starttime, -200, blocks[b.tmp,]$starttime+10, 200, col = rgb(1, 0, 1, alpha = 0.5), border = NA)
+                text(x = blocks[b.tmp,]$starttime, y = par('yaxp')[1], labels = paste("START: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 0, col = "magenta")
+              }
+            }
+            ## block stop
+            b.ind <- which((blocks$stoptime >= w.start) & (blocks$stoptime <= w.stop))
+            if (length(b.ind) > 0) {
+              for(b.tmp in b.ind) {
+                abline(v = blocks[b.tmp,]$stoptime, col = "magenta", lwd = 2, lty = 1)
+                rect(blocks[b.tmp,]$stoptime-10, -200, blocks[b.tmp,]$stoptime, 200,  col = rgb(1, 0, 1, alpha = 0.5), border = NA)
+                text(x = blocks[b.tmp,]$stoptime, y = par('yaxp')[1], labels = paste("STOP: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 1, col = "magenta")
+              }
+            }
+            
+          }
+          
+          
         } else if (x.axis.type == "timestamp") {
           # x -axis in hh:mm:ss units
           tmpTimeVec <- recording$properties$time.start + recording$signal[[signal]]$t[i.start:(i.start + ns - 1)]
@@ -333,37 +362,42 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
           } else {
               axis.POSIXct(1, at = seq(r[1], r[2], by = 'sec'), format = "%H:%M:%S")
           }
-        } else {stop(sprintf('Unrecognized option "%s" for x.axis.type. Use one of the following: {"numeric", "timestamp"}.', x.axis.type))}
-        
-        ## add r-peaks
-        if (! is.null(signal2)) {
-            ind <- which((recording$signal[[signal2]]$t >= w.start) & (recording$signal[[signal2]]$t <= w.stop))
-            points(recording$signal[[signal2]]$t[ind], recording$signal[[signal2]]$data[ind], col = signal2.color, pch = signal2.pch, cex = signal2.cex)
-        }
-
-        ## add block start and stop if present in the window
-        if (nrow(recording$conf$blocks) > 0) {
+       
+          ## add r-peaks
+          if (! is.null(signal2)) {
+              ind <- which((recording$signal[[signal2]]$t >= w.start) & (recording$signal[[signal2]]$t <= w.stop))
+              tmpTimeVec <- recording$properties$time.start +
+                            recording$signal[[signal2]]$t[ind]
+              points(tmpTimeVec, recording$signal[[signal2]]$data[ind], col = signal2.color, pch = signal2.pch, cex = signal2.cex)
+          }
+          
+          ## add block start and stop if present in the window
+          if (nrow(recording$conf$blocks) > 0) {
             ## block start
             b.ind <- which((blocks$starttime >= w.start) & (blocks$starttime <= w.stop))
             if (length(b.ind) > 0) {
-                for(b.tmp in b.ind) {
-                    abline(v = blocks[b.tmp,]$starttime, col = "magenta", lwd = 2, lty = 1)
-                    rect(blocks[b.tmp,]$starttime, -200, blocks[b.tmp,]$starttime+10, 200, col = rgb(1, 0, 1, alpha = 0.5), border = NA)
-                    text(x = blocks[b.tmp,]$starttime, y = 0, labels = paste("START: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 0, col = "magenta")
-                }
+              for(b.tmp in b.ind) {
+                b.start.time <- recording$properties$time.start + blocks[b.tmp,]$starttime
+                abline(v = b.start.time, col = "magenta", lwd = 2, lty = 1)
+                rect(b.start.time, -200, b.start.time+10, 200, col = rgb(1, 0, 1, alpha = 0.5), border = NA)
+                text(x = b.start.time, y = par('yaxp')[1], labels = paste("START: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 0, col = "magenta", cex=1.2)
+              }
             }
             ## block stop
             b.ind <- which((blocks$stoptime >= w.start) & (blocks$stoptime <= w.stop))
             if (length(b.ind) > 0) {
-                for(b.tmp in b.ind) {
-                    abline(v = blocks[b.tmp,]$stoptime, col = "magenta", lwd = 2, lty = 1)
-                    rect(blocks[b.tmp,]$stoptime-10, -200, blocks[b.tmp,]$stoptime, 200,  col = rgb(1, 0, 1, alpha = 0.5), border = NA)
-                    text(x = blocks[b.tmp,]$stoptime, y = 0, labels = paste("STOP: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 1, col = "magenta")
-                }
+              for(b.tmp in b.ind) {
+                b.stop.time <- recording$properties$time.start + blocks[b.tmp,]$stoptime
+                abline(v = b.stop.time, col = "magenta", lwd = 2, lty = 1)
+                rect(b.stop.time-10, -200, b.stop.time, 200,  col = rgb(1, 0, 1, alpha = 0.5), border = NA)
+                text(x = b.stop.time, y =  par('yaxp')[1], labels = paste("STOP: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 1, col = "magenta", cex=1.2)
+              }
             }
-
-        }
-
+            
+          }
+        
+        } else {stop(sprintf('Unrecognized option "%s" for x.axis.type. Use one of the following: {"numeric", "timestamp"}.', x.axis.type))}
+        
         i.start <- i.start + ns
     }
 

@@ -140,9 +140,9 @@ block_to_seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%
     if (is.null(block))
         block <- recording$conf$blocks
     
-    zerotime   <- recording$properties$zerotime
-    zerotime.s <- recording$properties$zerotime.s
-    time.start <- recording$properties$time.start
+    time.start <- recording$properties$time.start #start of recording
+    zerotime   <- recording$properties$zerotime #POSIXct, time zero timestamp for blocks specified in seconds
+    zerotime.s <- recording$properties$zerotime.s #numeric, same in seconds from time.start
         
     block.s           <- block
     block.s$starttime <- NA
@@ -161,7 +161,7 @@ block_to_seconds <- function(recording, block = NULL, timeformat = "%Y%m%dT%H%M%
         block.s$starttime <- as.numeric(difftime(ts, time.start, units = "secs"))
     }
 
-    if (block$starttype == "timestamp") {
+    if (block$stoptype == "timestamp") {
         ts                <- str_to_timestamp(defactor(block$stoptime, type = "string"), timeformat = timeformat)
         block.s$stoptime  <- as.numeric(difftime(ts, time.start, units = "secs"))
     }
