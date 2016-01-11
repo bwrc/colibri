@@ -64,6 +64,13 @@ analyze_recording <- function(recording, settings, signal, analysis.pipeline.fun
 #' @export
 analyze_block <- function(recording, settings, signal, block, analysis.pipeline.function) {
     block.s       <- block_to_seconds(recording, block = block)
+    
+    # Test that block end does not exceed signal end
+    if (block.s$stoptime > max(recording$signal[[signal]]$t)){
+      stop( sprintf("Block '%d' end exceeds signal '%s' end. Please fix this block. (Block task is '%s'.)",
+                   block.s$blockid, signal, block.s$task) )
+    }
+    
     data.segments <- generate_segments_from_block(block.s, settings)
     nsegments     <- nrow(data.segments)
 

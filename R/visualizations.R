@@ -276,7 +276,7 @@ plot_check_rr_detection <- function(recording, blockid, ecg.signal.name = "ECG",
 #' @export
 plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.color = "blue",
                             signal2 = NULL, signal2.color = "red", signal2.pch = 10, signal2.cex = 2,
-                            x.axis.type = "numeric") {
+                            x.axis.type = "numeric", blockIDfield = 'task') {
 
     require(gplots)
 
@@ -380,7 +380,7 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
                 b.start.time <- recording$properties$time.start + blocks[b.tmp,]$starttime
                 abline(v = b.start.time, col = "magenta", lwd = 2, lty = 1)
                 rect(b.start.time, -200, b.start.time+10, 200, col = rgb(1, 0, 1, alpha = 0.5), border = NA)
-                text(x = b.start.time, y = par('yaxp')[1], labels = paste("START: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 0, col = "magenta", cex=1.2)
+                text(x = b.start.time, y = par('yaxp')[1], labels = blocks[b.tmp, blockIDfield], adj = 0, col = "magenta", cex=1.2)
               }
             }
             ## block stop
@@ -390,7 +390,7 @@ plot_ecg_r_peak <- function(recording, filename, n = 60, signal = "ECG", signal.
                 b.stop.time <- recording$properties$time.start + blocks[b.tmp,]$stoptime
                 abline(v = b.stop.time, col = "magenta", lwd = 2, lty = 1)
                 rect(b.stop.time-10, -200, b.stop.time, 200,  col = rgb(1, 0, 1, alpha = 0.5), border = NA)
-                text(x = b.stop.time, y =  par('yaxp')[1], labels = paste("STOP: ", blocks[b.tmp,]$tasktype, sep = ""), adj = 1, col = "magenta", cex=1.2)
+                text(x = b.stop.time, y =  par('yaxp')[1], labels = blocks[b.tmp, blockIDfield], adj = 1, col = "magenta", cex=1.2)
               }
             }
             
