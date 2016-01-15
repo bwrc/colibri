@@ -325,14 +325,14 @@ cut_recordings_s <- function(collection, ts) {
 #'
 #' @param recording A recording.
 #' @param format Output format. Either \code{data.frame} (default) or \code{matrix}.
-#' @param add_segment_timestamp Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.
+#' @param add_timestamp Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.
 #'
 #' @return The analysis results either as a data frame or as a matrix.
 #'
 #' @family recording
 #'
 #' @export
-collect_results <- function(recording, format = "data.frame", add_segment_timestamp = TRUE) {
+collect_results <- function(recording, format = "data.frame", add_timestamp = TRUE) {
     ## sanity check
     if ("results" %in% names(recording))
         if (length(recording$results) < 1)
@@ -359,7 +359,7 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
         out$block      <- factor(as.numeric(data[,"block"]))
         out$segment    <- factor(as.numeric(data[,"segment"]))
 
-        if (add_segment_timestamp){
+        if (add_timestamp){
             if ("timestamp" %in% names(out)) {
                 out$timestamp  <- num_to_timestamp(out$timestamp)  
             } else {
@@ -390,19 +390,19 @@ collect_results <- function(recording, format = "data.frame", add_segment_timest
 #' from a recording and return them as a data frame.
 #'
 #' @param collection A recording collection
-#' @param add_segment_timestamp Should segment timestamps be added. Boolean. Default is \code{TRUE}.
+#' @param add_timestamp Should segment timestamps be added. Boolean. Default is \code{TRUE}.
 #'
 #' @return The analysis results as a data frame.
 #'
 #' @family recording
 #'
 #' @export
-collect_results_collection <- function(collection, add_segment_timestamp = TRUE) {
+collect_results_collection <- function(collection, add_timestamp = TRUE) {
     ## container for the results
     out <- data.frame()
 
     for (recording in collection) {
-        out <- rbind(out, collect_results(recording, format = "data.frame", add_segment_timestamp = add_segment_timestamp))
+        out <- rbind(out, collect_results(recording, format = "data.frame", add_timestamp = add_timestamp))
     }
 
     out
@@ -421,7 +421,7 @@ collect_results_collection <- function(collection, add_segment_timestamp = TRUE)
 #'
 #' @export
 add_segment_timestamp <- function(recording, results) {
-    warning("Usage of add_segment_timestamp() is discouraged. collect_results() adds them by default.\n")
+    warning("Usage of add_segment_timestamp() is discouraged. In current version of Colibri collect_results() adds them by default.\n")
     
     if (! "timestamp" %in% names(results)){
         ## Initialise empty timestamp field in the results structure
