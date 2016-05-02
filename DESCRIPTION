@@ -4,9 +4,9 @@ Date: 09.09.2014
 Title: Platform for automating analyses of physiological time series in R.
 Description: 
 Authors@R: c(person("Andreas", "Henelius", role = c("aut", "cre"), email =
-    "andreas.henelius@iki.fi"))
-Author: Andreas Henelius <andreas.henelius@iki.fi>
-Maintainer: Andreas Henelius <andreas.henelius@iki.fi>
+    "andreas.henelius@ttl.fi"))
+Author: Andreas Henelius <andreas.henelius@ttl.fi>
+Maintainer: Andreas Henelius <andreas.henelius@ttl.fi>
 Depends:
     R (>= 3.0.2),
     plyr,
