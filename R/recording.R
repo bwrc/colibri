@@ -217,8 +217,15 @@ find_recording_overlap <- function(collection) {
 #'
 #' @export
 cut_recording <- function(recording, ts = NULL) {
+    ## check that both starting and ending time stamps are given
+    if (length(ts) < 2)
+        stop("Need to have two elements in ts (start and end time of segment to cut)")
+
     signals   <- names(recording$signal)
 
+    ## ensure that the elements in ts are POSIXct
+    ts <- do.call(c, lapply(ts, str_to_timestamp))
+    
     for (s in signals) {
         recording$signal[[s]]   <- extract_segment_timestamp(recording, ts, signal = s)
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]

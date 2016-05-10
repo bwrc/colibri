@@ -1,10 +1,11 @@
 Package: colibri
-Version: 0.1.2
-Date: 09.09.2014
+Version: 0.2.0
+Date: 10.05.2016
 Title: Platform for automating analyses of physiological time series in R.
 Description: 
-Authors@R: c(person("Andreas", "Henelius", role = c("aut", "cre"), email =
-    "andreas.henelius@ttl.fi"))
+Authors@R: c(person("Andreas", "Henelius", role = c("aut", "cre"), email = "andreas.henelius@ttl.fi"),
+	   person("Jussi", "Korpela", role = c("aut"), email = "jussi.korpela@ttl.fi"),
+	   person("Finnish Institute of Occupational Health", role = c("cph")))
 Author: Andreas Henelius <andreas.henelius@ttl.fi>
 Maintainer: Andreas Henelius <andreas.henelius@ttl.fi>
 Depends:
@@ -21,3 +22,4 @@ Suggests:
     ggplot2
 License: MIT
 URL: NA
+RoxygenNote: 5.0.1

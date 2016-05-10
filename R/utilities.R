@@ -28,7 +28,7 @@ get_file_extension <- function(filename) {
 
 #' Convert a string to a timestamp
 #'
-#' @param s A string containing a timestamp.
+#' @param s A string containing a timestamp. If s is already a timestamp (POSIXct) the function does nothing and returns the input value.
 #' @param timeformat The timeformat used to parse the string. Default is "\%Y\%m\%dT\%H\%M\%S".
 #'
 #' @return A timestamp.
@@ -37,9 +37,13 @@ get_file_extension <- function(filename) {
 #'
 #' @export
 str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
+    ## if the 
+    if (inherits(s, "POSIXct"))
+        return(s)
+    
     if (is.null(timeformat))
         stop("Missing time format.")
-    as.POSIXct(strptime(as.character(s), timeformat), tz="UTC")
+    as.POSIXct(strptime(as.character(s), timeformat), tz = "UTC")
 }
 
 
