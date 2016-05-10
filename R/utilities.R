@@ -96,6 +96,21 @@ defactor <- function(x, type = "numeric") {
 }
 
 
+##' Set the timezone of a given \code{POSIXct} timestamp to UTC.
+##'
+##' Set the timezone of a given \code{POSIXct} timestamp to UTC.
+##'
+##' @param ts A \code{POSIXct} timestamp
+##'  
+##' @return The timestamp converted to UTC time.
+##'  
+##' @export 
+set_tz_to_utc <- function(ts) {
+    attr(ts, "tzone") <- "UTC"
+    ts
+}
+
+
 #' Convert a timestamp to seconds from the start of the recording.
 #'
 #' @param recording A recording structure.
