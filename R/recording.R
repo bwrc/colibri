@@ -225,7 +225,7 @@ cut_recording <- function(recording, ts = NULL) {
 
     ## ensure that the elements in ts are POSIXct
     ts <- do.call(c, lapply(ts, str_to_timestamp))
-    
+
     for (s in signals) {
         recording$signal[[s]]   <- extract_segment_timestamp(recording, ts, signal = s)
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]
@@ -264,11 +264,11 @@ cut_recording_s<- function(recording, ts = NULL) {
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]
     }
 
-    recording$properties$time.start     <- recording$properties$time.start + ts[1]
     recording$properties$time.stop      <- recording$properties$time.start + ts[2]
     recording$properties$time.start.raw <- NA
     recording$properties$time.stop.raw  <- NA
     recording$properties$zerotime       <- recording$properties$time.start + ts[1]
+    recording$properties$time.start     <- recording$properties$time.start + ts[1]
     recording$properties$length         <- ts[2] - ts[1]
 
     recording
@@ -368,14 +368,14 @@ collect_results <- function(recording, format = "data.frame", add_timestamp = TR
 
         if (add_timestamp){
             if ("timestamp" %in% names(out)) {
-                out$timestamp  <- num_to_timestamp(out$timestamp)  
+                out$timestamp  <- num_to_timestamp(out$timestamp)
             } else {
                 cat("Field ''timestamp'' not present in data. Use add_segment_timestamp() to add timestamps or recompute results using the current version of Colibri.")
             }
         } else {
             if ("timestamp" %in% names(out)) out$timestamp  <- NULL #remove field
         }
-            
+
 
         ## add metadata from the block information in the recording
         resultrow.template <- generate_result_row(recording$conf$blocks)
@@ -429,22 +429,22 @@ collect_results_collection <- function(collection, add_timestamp = TRUE) {
 #' @export
 add_segment_timestamp <- function(recording, results) {
     warning("Usage of add_segment_timestamp() is discouraged. In current version of Colibri collect_results() adds them by default.\n")
-    
+
     if (! "timestamp" %in% names(results)){
         ## Initialise empty timestamp field in the results structure
         results$timestamp      <- as.POSIXct(rep(NA, nrow(results)))
-    
+
         for (i in unique(results$blockid)) {
             block.tmp              <- subset(recording$conf$blocks, blockid == i)
             block.s                <- block_to_seconds(recording, block = block.tmp)
             #block.s expresses time in seconds relative to recording$properties$zerotime
             data.segments          <- generate_segments_from_block(block.s, recording$conf$settings)
             #data.segments are expressed in seconds relative to recording$properties$zerotime
-            
+
             for (v in levels(results$variable)) {
                 ind <- which((results$blockid == i) & (results$variable == v))
                 ind <- ind[order(results$segment[ind])] #into ascending order
-                
+
                 ## Add the offset of each segment and half of the segment length to get the correct midpoint
                 results$timestamp[ind] <- recording$properties$zerotime + data.segments[,1] + (recording$conf$settings$segment.length / 2)
             }
