@@ -54,7 +54,9 @@ new_recording <- function() {
 #'
 #' @param recording The recording structure
 #' @param ibi An array with the interbeat intervals
-#' @param ibi.t An optional array with the times of occurrence of the interbeat intervals.
+#' @param ibi.t An optional array with the times of occurrence of the
+#'     interbeat intervals. If not given (default NULL) the time
+#'     vector is created starting from zero.
 #'
 #' @return The recording structure with the interbeat intervals added.
 #'
@@ -78,10 +80,10 @@ recording_set_ibi <- function(recording, ibi, ibi.t = NULL) {
     recording$signal$ibi$unit <- "ms"
 
     ## Calculate the length of the recording
-    recording$properties$length <- (sum(recording$signal$ibi$data) - recording$signal$ibi$data[1]) / 1000
-
-    if (is.null(recording$properties$time.stop))
-        recording$properties$time.stop <- recording$properties$time.start + recording$properties$length
+    ## recording$properties$length <- (sum(recording$signal$ibi$data) - recording$signal$ibi$data[1]) / 1000
+    ## 
+    ## if (is.null(recording$properties$time.stop))
+    ##    recording$properties$time.stop <- recording$properties$time.start + recording$properties$length
 
     recording
 }
