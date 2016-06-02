@@ -11,7 +11,9 @@ recording_set_ibi(recording, ibi, ibi.t = NULL)
 
 \item{ibi}{An array with the interbeat intervals}
 
-\item{ibi.t}{An optional array with the times of occurrence of the interbeat intervals.}
+\item{ibi.t}{An optional array with the times of occurrence of the
+interbeat intervals. If not given (default NULL) the time
+vector is created starting from zero.}
 }
 \value{
 The recording structure with the interbeat intervals added.

@@ -12,13 +12,11 @@ generate_segments(time.start, time.stop, segment.length, segment.overlap,
 
 \item{time.stop}{A stop time in seconds.}
 
-\item{segment.length}{The segment length}
+\item{segment.length}{The segment length in seconds.}
 
-\item{segment.overlap}{The segment overlap}
+\item{segment.overlap}{The segment overlap in seconds.}
 
 \item{tolerance}{The tolerance of the last segment length in seconds. Optional, default is 1.}
-
-\item{blockid}{A numeric block ID.}
 }
 \value{
 A two-column matrix with the start time (in seconds) of

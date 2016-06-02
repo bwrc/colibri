@@ -3,7 +3,7 @@
 \name{num_to_timestamp}
 \alias{num_to_timestamp}
 \title{Convert a numeric value to a timestamp
-Assumes the numeric values come from a call to as.numeric() on a POSIXct with 
+Assumes the numeric values come from a call to as.numeric() on a POSIXct with
 time zone tz="UTC"!}
 \usage{
 num_to_timestamp(tn)
@@ -16,7 +16,7 @@ A vector of timestamps of class POSIXct
 }
 \description{
 Convert a numeric value to a timestamp
-Assumes the numeric values come from a call to as.numeric() on a POSIXct with 
+Assumes the numeric values come from a call to as.numeric() on a POSIXct with
 time zone tz="UTC"!
 }
 \seealso{
