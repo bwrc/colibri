@@ -37,10 +37,9 @@ get_file_extension <- function(filename) {
 #'
 #' @export
 str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
-    ## if the 
     if (inherits(s, "POSIXct"))
         return(s)
-    
+
     if (is.null(timeformat))
         stop("Missing time format.")
     as.POSIXct(strptime(as.character(s), timeformat), tz = "UTC")
@@ -48,7 +47,7 @@ str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
 
 
 #' Convert a numeric value to a timestamp
-#' Assumes the numeric values come from a call to as.numeric() on a POSIXct with 
+#' Assumes the numeric values come from a call to as.numeric() on a POSIXct with
 #' time zone tz="UTC"!
 #'
 #' @param tn A numeric vector representing time in seconds since the epoch ‘1970-01-01 00:00.00 UTC’
@@ -59,7 +58,7 @@ str_to_timestamp <- function(s, timeformat = "%Y%m%dT%H%M%S") {
 #'
 #' @export
 num_to_timestamp <- function(tn) {
-  as.POSIXct(tn, origin = as.POSIXct("1970-01-01", tz = "UTC"), tz = "UTC")
+    as.POSIXct(tn, origin = as.POSIXct("1970-01-01", tz = "UTC"), tz = "UTC")
 }
 
 
@@ -101,10 +100,10 @@ defactor <- function(x, type = "numeric") {
 ##' Set the timezone of a given \code{POSIXct} timestamp to UTC.
 ##'
 ##' @param ts A \code{POSIXct} timestamp
-##'  
+##'
 ##' @return The timestamp converted to UTC time.
-##'  
-##' @export 
+##'
+##' @export
 set_tz_to_utc <- function(ts) {
     attr(ts, "tzone") <- "UTC"
     ts
@@ -393,10 +392,9 @@ generate_segments_from_block <- function(block, settings, tolerance = 1) {
 #' accepted, and when the entire segment must be discarded.
 #'
 #' @param time.start A start time in seconds.
-#' @param segment.length The segment length
-#' @param segment.overlap The segment overlap
 #' @param time.stop A stop time in seconds.
-#' @param blockid A numeric block ID.
+#' @param segment.length The segment length in seconds.
+#' @param segment.overlap The segment overlap in seconds.
 #' @param tolerance The tolerance of the last segment length in seconds. Optional, default is 1.
 #'
 #' @return A two-column matrix with the start time (in seconds) of
@@ -407,6 +405,10 @@ generate_segments_from_block <- function(block, settings, tolerance = 1) {
 #'
 #' @export
 generate_segments <- function(time.start, time.stop, segment.length, segment.overlap, tolerance = 1) {
+
+    ## Check if the desired segmentation fits within the timefram from time.start to time.stop
+    if (segment.length > (time.stop - time.start))
+        stop("Segmentation does not fit into block!")
 
     if (tolerance > 0)
         time.stop <- time.stop + tolerance
