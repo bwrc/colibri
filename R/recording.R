@@ -341,33 +341,51 @@ cut_recordings_s <- function(collection, ts) {
 #' @family recording
 #'
 #' @export
-collect_results <- function(recording, format = "data.frame", add_timestamp = TRUE) {
+collect_results <- function(recording,
+                            signals = NULL,
+                            format = "data.frame",
+                            add_timestamp = TRUE) {
     ## sanity check
     if ("results" %in% names(recording))
         if (length(recording$results) < 1)
             stop("No results present. Cannot continue.")
+  
+    if (is.null(signals)){
+      signals = names(recording$results)
+      cat('Loading results for all signals...')
+    }
 
     ## Return results as a numeric matrix, without extra factors etc
     if (format == "matrix") {
         out <- do.call("rbind", do.call("c", recording$results))
     }
 
-
     ## Return results as a data frame
     if (format == "data.frame") {
-        data           <- do.call("rbind", do.call("c", recording$results))
-        rownames.tmp   <- rownames(data)
-        rownames(data) <- NULL
-        out            <- as.data.frame(data)
-
-        out$variable   <- factor(as.character(rownames.tmp))
-        out$value      <- as.numeric(data[,"value"])
-
-        out$segmentid  <- as.numeric(data[,"segment"])
-        out$blockid    <- as.numeric(data[,"block"])
-        out$block      <- factor(as.numeric(data[,"block"]))
-        out$segment    <- factor(as.numeric(data[,"segment"]))
-
+        out <- data.frame()
+        for (signal in signals){
+          data           <- do.call("rbind", do.call("c", recording$results[[signal]]))
+          rownames.tmp   <- rownames(data)
+          rownames(data) <- NULL
+          tmpd            <- as.data.frame(data)
+          
+          #TODO: Why use two data structures data and tmpd? Why not just rename
+          # segment to segmentid and block to blockid and generate factors from them?
+          # Why rownames.tmp is needed? Can't we just say data$variable <- rownames(data)?
+          
+          tmpd$variable   <- factor(as.character(rownames.tmp))
+          tmpd$value      <- as.numeric(data[,"value"])
+          
+          tmpd$segmentid  <- as.numeric(data[,"segment"])
+          tmpd$segment    <- factor(as.numeric(data[,"segment"]))
+          
+          tmpd$blockid    <- as.numeric(data[,"block"])
+          tmpd$block      <- factor(as.numeric(data[,"block"]))
+          
+          tmpd$signal     <- signal
+          out <- rbind(out, tmpd)
+        }
+        
         if (add_timestamp){
             if ("timestamp" %in% names(out)) {
                 out$timestamp  <- num_to_timestamp(out$timestamp)
@@ -377,8 +395,7 @@ collect_results <- function(recording, format = "data.frame", add_timestamp = TR
         } else {
             if ("timestamp" %in% names(out)) out$timestamp  <- NULL #remove field
         }
-
-
+        
         ## add metadata from the block information in the recording
         resultrow.template <- generate_result_row(recording$conf$blocks)
         new.columns        <- setdiff(names(resultrow.template), names(out))

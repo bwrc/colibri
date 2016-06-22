@@ -96,7 +96,7 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
         res.list[[i]] <- res.seg
     }
 
-    recording$results[[as.character(block$blockid)]] <- res.list
+    recording$results[[signal]][[as.character(block$blockid)]] <- res.list
     
     recording
 }
