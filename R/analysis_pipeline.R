@@ -103,6 +103,7 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
 
 
 #' Calculate results.
+#' TODO: documentation out of date, why?
 #'
 #' This function defines the analysis pipeline for HRV analysis. If new analysis
 #' functions are incorporated these analysis steps should be added to
@@ -143,4 +144,41 @@ analysis_pipeline_ibi <- function(settings, data) {
 
     ## Return results
     res
+}
+
+
+#' Pipeline function for accelerometer feature  computation
+#'
+#' This function defines the analysis pipeline for accelerometer analysis.
+#' If new analysis functions are incorporated these analysis steps should be added to
+#' this function as well.
+#' 
+#' Add the following to settings for this function to work:
+#'  settings$analysis$acceleration <- T
+#'  settings$acceleration$metric.list <- c("min", "max", "mean", "median", "sd", "se")
+#'
+#' @param settings The settings structure used for analysis
+#' @param data A list with elements $data and $t containing the signal to analyze
+#'
+#' @return The analysis results as a named list.
+#' 
+#' @family pipeline
+#'
+#' @export
+analysis_pipeline_acc <- function(settings, data){
+  
+  ## Unpack the data
+  acc <- data$data
+  t.acc <- data$t
+  
+  ## container for results
+  res <- c()
+  
+  ## Compute basic features
+  if (settings$analysis$acceleration) 
+    res <- c(res,
+             analyse_acceleration(settings$acceleration$metric.list, settings, acc))
+  
+  ## Return results
+  res
 }

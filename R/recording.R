@@ -333,6 +333,7 @@ cut_recordings_s <- function(collection, ts) {
 #' from a recording and return them as a data frame or as a matrix.
 #'
 #' @param recording A recording.
+#' @param signals, [1,m] string array, Names of signals whose results to collect. Defaults to all signals i.e. names(recording$results). 
 #' @param format Output format. Either \code{data.frame} (default) or \code{matrix}.
 #' @param add_timestamp Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.
 #'
