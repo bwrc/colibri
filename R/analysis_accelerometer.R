@@ -17,6 +17,10 @@ analyse_acceleration <- function (metric.list, settings, acc, t.acc = NULL){
 
 
 #' Helper function for accelerometer analysis
+#' 
+#' Note: The value of the sum metric depends on the length of the calculation segment.
+#' Usually the last calculation segment of a given block is longer than the rest to 
+#' fill-in the whole block.
 #'
 #' @param metric A time-domain metric to be estimated.
 #' @param acc A vector with the accelerometer signal.
@@ -35,5 +39,7 @@ analyse_acceleration_helper <- function (metric, acc, settings){
           median = matrix(dimnames = list(metric, "value"), median(acc)),
           sd = matrix(dimnames = list(metric, "value"), sd(acc)),
           se = matrix(dimnames = list(metric, "value"), se(acc)),
+          sum = matrix(dimnames = list(metric, "value"), sum(acc),
+          N = matrix(dimnames = list(metric, "value"), length(acc))
   )
 }
