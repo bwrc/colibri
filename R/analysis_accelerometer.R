@@ -39,7 +39,7 @@ analyse_acceleration_helper <- function (metric, acc, settings){
           median = matrix(dimnames = list(metric, "value"), median(acc)),
           sd = matrix(dimnames = list(metric, "value"), sd(acc)),
           se = matrix(dimnames = list(metric, "value"), se(acc)),
-          sum = matrix(dimnames = list(metric, "value"), sum(acc),
+          sum = matrix(dimnames = list(metric, "value"), sum(acc)),
           N = matrix(dimnames = list(metric, "value"), length(acc))
   )
 }
