@@ -80,7 +80,6 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
     for (i in seq.int(nsegments)) {
         ## Extract the data corresponding to this segment
         res           <- extract_segment_s(recording, data.segments[i,], signal = signal)
-        browser()
         res.seg       <- analysis.pipeline.function(settings, res)
         res.seg       <- do.call(rbind, res.seg)
 
