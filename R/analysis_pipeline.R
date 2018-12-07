@@ -9,7 +9,7 @@
 #' analysis, i.e., a funtion containing the individual analysis steps.
 #'
 #' @return The recording collection with the result added to each of the individual recordings.
-#' 
+#'
 #' @family pipeline
 #'
 #' @export
@@ -29,13 +29,13 @@ analyze_recording_collection <- function(recording.collection, settings, signal,
 #' analysis, i.e., a funtion containing the individual analysis steps.
 #'
 #' @return The recording structure with the result from the individual blocks added to the results structure in the recording.
-#' 
+#'
 #' @family pipeline
 #'
 #' @export
 analyze_recording <- function(recording, settings, signal, analysis.pipeline.function) {
     n.blocks          <- nrow(recording$conf$blocks)
-    
+
     for (i in seq.int(n.blocks)) {
         block     <- recording$conf$blocks[i,]
         recording <- analyze_block(recording, settings, signal, block, analysis.pipeline.function = analysis.pipeline.function)
@@ -48,29 +48,29 @@ analyze_recording <- function(recording, settings, signal, analysis.pipeline.fun
 #' Analyze results in a block.
 #'
 #' Analyze the results in a particular block.
-#' 
+#'
 #' @param recording A recording structure
 #' @param settings The settings structure used for the analysis (see e.g., \code{\link{settings_template_hrv}}).
 #' @param signal A string or a list with the names of the signals to analyze.
 #' @param block A block structure.
-#' @param signal The name 
+#' @param signal The name
 #' @param analysis.pipeline.function The pipeline function used in the
 #' analysis, i.e., a funtion containing the individual analysis steps.
 #'
 #' @return The recording structure with the result from the block added to the results structure in the recording.
-#' 
+#'
 #' @family pipeline
 #'
 #' @export
 analyze_block <- function(recording, settings, signal, block, analysis.pipeline.function) {
     block.s       <- block_to_seconds(recording, block = block)
-    
+
     # Test that block end does not exceed signal end
     if (block.s$stoptime > max(recording$signal[[signal]]$t)){
       warning( sprintf("Block '%d' end exceeds signal '%s' end. Please fix this block. (Block task is '%s'.)",
                    block.s$blockid, signal, block.s$task) )
     }
-    
+
     data.segments <- generate_segments_from_block(block.s, settings)
     nsegments     <- nrow(data.segments)
 
@@ -80,7 +80,6 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
     for (i in seq.int(nsegments)) {
         ## Extract the data corresponding to this segment
         res           <- extract_segment_s(recording, data.segments[i,], signal = signal)
-
         res.seg       <- analysis.pipeline.function(settings, res)
         res.seg       <- do.call(rbind, res.seg)
 
@@ -96,13 +95,14 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
         res.list[[i]] <- res.seg
     }
 
-    recording$results[[as.character(block$blockid)]] <- res.list
-    
+    recording$results[[signal]][[as.character(block$blockid)]] <- res.list
+
     recording
 }
 
 
 #' Calculate results.
+#' TODO: documentation out of date, why?
 #'
 #' This function defines the analysis pipeline for HRV analysis. If new analysis
 #' functions are incorporated these analysis steps should be added to
@@ -113,7 +113,7 @@ analyze_block <- function(recording, settings, signal, block, analysis.pipeline.
 #' @param t.ibi A vector with the times of occurrence of the interbeat intervals (IBIs).
 #'
 #' @return The analysis results as a named list.
-#' 
+#'
 #' @family pipeline
 #'
 #' @export
@@ -124,7 +124,7 @@ analysis_pipeline_ibi <- function(settings, data) {
 
     ## container for results
     res <- c()
-    
+
     ## Time domain analysis
     if (settings$analysis$time)
         res <- c(res, analyse_timedomain(settings$timedomain$metric.list, settings, ibi))
@@ -132,7 +132,7 @@ analysis_pipeline_ibi <- function(settings, data) {
     ## Frequency domain analysis
     if (settings$analysis$frequency)
         res <- c(res, analyse_frequencydomain(settings$frequencydomain$metric.list, ibi, t.ibi, settings))
-    
+
     ## Geometric analysis
     if (settings$analysis$geometric)
         res <- c(res, analyse_geometric(settings$geometric$metric.list, ibi, t.ibi, settings))
@@ -143,4 +143,41 @@ analysis_pipeline_ibi <- function(settings, data) {
 
     ## Return results
     res
+}
+
+
+#' Pipeline function for accelerometer feature  computation
+#'
+#' This function defines the analysis pipeline for accelerometer analysis.
+#' If new analysis functions are incorporated these analysis steps should be added to
+#' this function as well.
+#'
+#' Add the following to settings for this function to work:
+#'  settings$analysis$acceleration <- T
+#'  settings$acceleration$metric.list <- c("min", "max", "mean", "median", "sd", "se")
+#'
+#' @param settings The settings structure used for analysis
+#' @param data A list with elements $data and $t containing the signal to analyze
+#'
+#' @return The analysis results as a named list.
+#'
+#' @family pipeline
+#'
+#' @export
+analysis_pipeline_acc <- function(settings, data){
+
+  ## Unpack the data
+  acc <- data$data
+  t.acc <- data$t
+
+  ## container for results
+  res <- c()
+
+  ## Compute basic features
+  if (settings$analysis$acceleration)
+    res <- c(res,
+             analyse_acceleration(settings$acceleration$metric.list, settings, acc))
+
+  ## Return results
+  res
 }

@@ -132,8 +132,3 @@ settings_template_hrv <- function() {
 
     settings
 }
-
-
-
-
-

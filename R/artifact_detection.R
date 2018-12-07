@@ -3,26 +3,25 @@
 #' Implements a sligthly modified method presented by Xu and
 #' Schuckers.  Each RR interval is compared with the median of 24
 #' surrounding non-artefactual RR intervals and the last accepted RR
-#' interval. Only if both differences are outside +- 20% the interval
+#' interval. Only if both differences are outside +- 20 percent the interval
 #' will be marked as an artifact.
 #'
 #' @param x A vector with the interbeat intervals (IBIs)
-#' 
+#'
 #' @return A list with the values of the metrics.
-#' 
+#'
 #' @references Xu, X., Schuckers, S.: Automatic Detection of Artifacts in Heart
 #'             Period Data. J Electrocardiol. 2001;34 Suppl:205-10.
 #'
 #' @family HRV
-#' 
+#'
 #' @export
-detect_artifacts_xu <- function(x) {
+detect_artifacts_xu <- function(x, thr = 0.2) {
 
     N             <- length(x)
     last.accepted <- x[1]
     art_ind       <- rep(NA, N)
     ind_before    <- rep(NA, 12)
-    thr           <- 0.2
 
     j <- 1
     ## loop over the IBI series in windows
@@ -58,17 +57,17 @@ detect_artifacts_xu <- function(x) {
 #'
 #' @param ibi A vector with the interbeat intervals (IBIs)
 #' @param ibi.t A vector with the times of occurrence of the interbeat intervals (IBIs)
-#' 
+#'
 #' @return Nothing.
-#' 
+#'
 #' @family HRV
-#' 
+#'
 #' @export
 plot_artifacts <- function(ibi, ibi.t) {
     ## Detect artifacts
     ind <- detect_artifacts_xu(ibi)
     ibi <- 60e3 / ibi
-    
+
     ## Plot raw ibi data
     plot(ibi.t, ibi, type = "b", col = "black", xlab = "time [s]", ylab = "heart rate [bpm]")
 
