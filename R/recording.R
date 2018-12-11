@@ -81,7 +81,7 @@ recording_set_ibi <- function(recording, ibi, ibi.t = NULL) {
 
     ## Calculate the length of the recording
     ## recording$properties$length <- (sum(recording$signal$ibi$data) - recording$signal$ibi$data[1]) / 1000
-    ## 
+    ##
     ## if (is.null(recording$properties$time.stop))
     ##    recording$properties$time.stop <- recording$properties$time.start + recording$properties$length
 
@@ -207,7 +207,8 @@ find_recording_overlap <- function(collection) {
 #' Cut a recording to the given time interval, given as timestamps.
 #'
 #' Also realign the time vector so that t = 0 is at the new start
-#' time and recalculate the length of the recording.  All signals in
+#' time and recalculate the length of the recording to match the
+#' length of the shortest signal in the recording. All signals in
 #' the recording are processed.
 #'
 #' @param recording A recording.
@@ -228,13 +229,20 @@ cut_recording <- function(recording, ts = NULL) {
     ## ensure that the elements in ts are POSIXct
     ts <- do.call(c, lapply(ts, str_to_timestamp))
 
+    length_arr_s <- rep(NA, length(signals)) #store signal durations for setting the end time
+    i <- 1
     for (s in signals) {
         recording$signal[[s]]   <- extract_segment_timestamp(recording, ts, signal = s)
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]
+
+        length_arr_s[i] <- length(recording$signal[[s]]$data) * (1/recording$signal[[s]]$samplingrate)
+        i <- i + 1
     }
 
     recording$properties$time.start     <- ts[[1]]
-    recording$properties$time.stop      <- ts[[2]]
+    # Set recording end time to match the length of the shortest signal
+    # (this ensures that calculation segments will fit on all signals, instead of just the long ones)
+    recording$properties$time.stop      <- ts[[1]] + min(length_arr_s, na.rm = T)
     recording$properties$time.start.raw <- NA
     recording$properties$time.stop.raw  <- NA
     recording$properties$zerotime       <- ts[[1]]
@@ -261,17 +269,27 @@ cut_recording <- function(recording, ts = NULL) {
 cut_recording_s<- function(recording, ts = NULL) {
     signals   <- names(recording$signal)
 
+    length_arr_s <- rep(NA, length(signals)) #store signal durations for setting the end time
+    i <- 1
     for (s in signals) {
         recording$signal[[s]]   <- extract_segment_s(recording, ts, signal = s)
         recording$signal[[s]]$t <- recording$signal[[s]]$t - recording$signal[[s]]$t[1]
+
+        length_arr_s[i] <- length(recording$signal[[s]]$data) * (1/recording$signal[[s]]$samplingrate)
+        i <- i + 1
     }
 
-    recording$properties$time.stop      <- recording$properties$time.start + ts[2]
+    time_start_orig <- recording$properties$time.start
+    recording$properties$zerotime       <- time_start_orig + ts[1]
+    recording$properties$time.start     <- time_start_orig + ts[1]
+
+    # Set recording end time to match the length of the shortest signal
+    # (this ensures that calculation segments will fit on all signals, instead of just the long ones)
+    recording$properties$time.stop      <- time_start_orig + min(length_arr_s, na.rm = T)
+    recording$properties$length         <- min(length_arr_s, na.rm = T)
+
     recording$properties$time.start.raw <- NA
     recording$properties$time.stop.raw  <- NA
-    recording$properties$zerotime       <- recording$properties$time.start + ts[1]
-    recording$properties$time.start     <- recording$properties$time.start + ts[1]
-    recording$properties$length         <- ts[2] - ts[1]
 
     recording
 }
@@ -333,7 +351,7 @@ cut_recordings_s <- function(collection, ts) {
 #' from a recording and return them as a data frame or as a matrix.
 #'
 #' @param recording A recording.
-#' @param signals, [1,m] string array, Names of signals whose results to collect. Defaults to all signals i.e. names(recording$results). 
+#' @param signals, [1,m] string array, Names of signals whose results to collect. Defaults to all signals i.e. names(recording$results).
 #' @param format Output format. Either \code{data.frame} (default) or \code{matrix}.
 #' @param add_timestamp Should segment timestamps be added. Only works if the output format is a data frame. Boolean. Default is \code{TRUE}.
 #'
@@ -350,7 +368,7 @@ collect_results <- function(recording,
     if ("results" %in% names(recording))
         if (length(recording$results) < 1)
             stop("No results present. Cannot continue.")
-  
+
     if (is.null(signals)){
       signals = names(recording$results)
       cat('Loading results for all signals...')
@@ -369,24 +387,24 @@ collect_results <- function(recording,
           rownames.tmp   <- rownames(data)
           rownames(data) <- NULL
           tmpd            <- as.data.frame(data)
-          
+
           #TODO: Why use two data structures data and tmpd? Why not just rename
           # segment to segmentid and block to blockid and generate factors from them?
           # Why rownames.tmp is needed? Can't we just say data$variable <- rownames(data)?
-          
+
           tmpd$variable   <- factor(as.character(rownames.tmp))
           tmpd$value      <- as.numeric(data[,"value"])
-          
+
           tmpd$segmentid  <- as.numeric(data[,"segment"])
           tmpd$segment    <- factor(as.numeric(data[,"segment"]))
-          
+
           tmpd$blockid    <- as.numeric(data[,"block"])
           tmpd$block      <- factor(as.numeric(data[,"block"]))
-          
+
           tmpd$signal     <- signal
           out <- rbind(out, tmpd)
         }
-        
+
         if (add_timestamp){
             if ("timestamp" %in% names(out)) {
                 out$timestamp  <- num_to_timestamp(out$timestamp)
@@ -396,7 +414,7 @@ collect_results <- function(recording,
         } else {
             if ("timestamp" %in% names(out)) out$timestamp  <- NULL #remove field
         }
-        
+
         ## add metadata from the block information in the recording
         resultrow.template <- generate_result_row(recording$conf$blocks)
         new.columns        <- setdiff(names(resultrow.template), names(out))
